@@ -1,0 +1,224 @@
+for_window {
+ [title=""] floating enable, resize set 1280 720
+ [title="wezterm"] floating disable
+ [title="kitty"] floating disable
+}
+
+# [title="game-*"] floating enable, resize set 1920 1080
+# [title="app-*"] floating enable, resize set 1920 1080
+
+
+# exec --no-startup-id xfsettingsd --sm-client-disable
+# exec --no-startup-id xfce4-power-manager
+# exec --no-startup-id xfce4-clipman
+# exec --no-startup-id dunst
+# exec --no-startup-id thunar --daemon
+# exec --no-startup-id xfce4-volumed
+# exec --no-startup-id fcitx -d
+
+set $mod Mod1
+
+
+# Gestos
+#
+# Esto se supone que es un keybiding para cambiar la distribucion de tecladow
+# bindsym ALT+p exec swaymsg input * xkb_switch_layout next
+
+# Home row direction keys, like vim
+set $left j
+set $down k
+set $up i
+set $right l
+# Your preferred terminal emulator
+set $term wezterm
+# Your preferred application launcher
+set $menu wofi --show drun
+
+#
+    # Start a terminal
+    bindsym ALT+t exec $term
+
+    # Kill focused window
+    bindsym ALT+q kill
+
+    # Start your launcher
+    bindsym ALT+d exec $menu
+
+    # Drag floating windows by holding down $mod and left mouse button.
+    # Resize them with right mouse button + $mod.
+    # Despite the name, also works for non-floating windows.
+    # Change normal to inverse to use left mouse button for resizing and right
+    # mouse button for dragging.
+    floating_modifier $mod normal
+
+    # Reload the configuration file
+    bindsym ALT+Shift+c reload
+
+    # Exit sway (logs you out of your Wayland session)
+    bindsym ALT+Shift+e exec swaynag -t warning -m 'Che te vas a ir de sway?  osea vas a cerrar sesion.' -B 'Si, ya fue' 'swaymsg exit'
+#
+# Layout stuff:
+    bindsym $mod+b splith
+    bindsym $mod+v splitv
+
+    # Tipos de agrupaciones
+    bindsym $mod+s layout stacking
+    bindsym $mod+w layout tabbed
+
+    # Pantalla completa
+    bindsym $mod+f fullscreen
+
+    # Toggle the current focus between tiling and floating mode
+    bindsym $mod+Shift+f floating toggle
+
+    # Swap focus between the tiling area and the floating area
+    # bindsym $mod+space focus mode_toggle
+
+    # Move focus to the parent container
+    bindsym $mod+a focus parent
+#
+#
+# Moving around:
+#
+    # Move your focus around
+    bindsym $mod+$left focus left
+    bindsym $mod+$down focus down
+    bindsym $mod+$up focus up
+    bindsym $mod+$right focus right
+    # Or use $mod+[up|down|left|right]
+    bindsym $mod+Left focus left
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
+	    bindsym $mod+Right focus right
+
+    # Move the focused window with the same, but add Shift
+    bindsym $mod+Shift+$left move left
+    bindsym $mod+Shift+$down move down
+    bindsym $mod+Shift+$up move up
+    bindsym $mod+Shift+$right move right
+    # Ditto, with arrow keys
+    bindsym $mod+Shift+Left move left
+    bindsym $mod+Shift+Down move down
+    bindsym $mod+Shift+Up move up
+    bindsym $mod+Shift+Right move right
+#
+# Workspaces:
+#
+    # Switch to workspace
+    bindsym $mod+1 workspace number 1
+    bindsym $mod+2 workspace number 2
+    bindsym $mod+3 workspace number 3
+    bindsym $mod+4 workspace number 4
+    bindsym $mod+5 workspace number 5
+    bindsym $mod+6 workspace number 6
+    bindsym $mod+7 workspace number 7
+    bindsym $mod+8 workspace number 8
+    bindsym $mod+9 workspace number 9
+    bindsym $mod+0 workspace number 10
+    # Move focused container to workspace
+    bindsym $mod+Shift+1 move container to workspace number 1
+    bindsym $mod+Shift+2 move container to workspace number 2
+    bindsym $mod+Shift+3 move container to workspace number 3
+    bindsym $mod+Shift+4 move container to workspace number 4
+    bindsym $mod+Shift+5 move container to workspace number 5
+    bindsym $mod+Shift+6 move container to workspace number 6
+    bindsym $mod+Shift+7 move container to workspace number 7
+    bindsym $mod+Shift+8 move container to workspace number 8
+    bindsym $mod+Shift+9 move container to workspace number 9
+    bindsym $mod+Shift+0 move container to workspace number 10
+
+
+# Scratchpad:
+#
+    # Sway has a "scratchpad", which is a bag of holding for windows.
+    # You can send windows there and get them back later.
+
+    # Move the currently focused window to the scratchpad
+    bindsym $mod+Shift+minus move scratchpad
+
+    # Show the next scratchpad window or hide the focused scratchpad window.
+    # If there are multiple scratchpad windows, this command cycles through them.
+    bindsym $mod+minus scratchpad show
+#
+# Resizing containers:
+#
+mode "resize" {
+    # left will shrink the containers width
+    # right will grow the containers width
+    # up will shrink the containers height
+    # down will grow the containers height
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+    # Ditto, with arrow keys
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    # Return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+#
+# Utilities:
+#
+    # Special keys to adjust volume via PulseAudio
+    bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
+    bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume \@DEFAULT_SINK@ -5%
+    bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume \@DEFAULT_SINK@ +5%
+    bindsym --locked XF86AudioMicMute exec pactl set-source-mute \@DEFAULT_SOURCE@ toggle
+    # Special keys to adjust brightness via brightnessctl
+    bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
+    bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+    # Special key to take a screenshot with grim
+    bindsym Print exec grim
+
+# Output configuration
+#
+# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
+ output * bg /mnt/d/imagenes/fondos/landscape.jpg fill
+# output * bg /home/mori/Pictures/wallpapers/STRAY_KITTY_CLUB-beige.png fill
+#
+# Example configuration:
+
+# Res config
+output * {
+    mode 1920x1080
+    scale 1.0
+    subpixel rgb
+    adaptive_sync on
+}
+
+# You can get the names of your outputs by running: swaymsg -t get_outputs
+
+input type:keyboard {
+    xkb_layout "us,es"
+    xkb_variant "intl,"
+    }
+
+
+# Borde de ventana enfocada: negro con 50 % de transparencia (80 en hex ≈ 50 %)
+client.focused          #00000010   #1e1e1e   #dcdccc
+# Enfocada inactiva: un poco más discreto
+client.focused_inactive #00000020   #1e1e1e   #888888
+# No enfocada: casi invisible
+client.unfocused        #00000020   #1e1e1e   #555555
+
+bar {
+
+  swaybar_command waybar
+
+}
+
+default_border pixel 1
+default_floating_border pixel 5
+
+hide_edge_borders smart
+xwayland disable
+
+include /etc/sway/config.d/*
+

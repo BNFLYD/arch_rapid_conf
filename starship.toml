@@ -1,0 +1,132 @@
+scan_timeout = 1000  # ← AGREGÁ ARRIBA de format =
+command_timeout = 10000  # ← Subí de 5000 a 10000
+
+format = """
+[](fg:#8A8A8A)\
+[$python](bg:#8A8A8A)\
+[$username](bg:#8A8A8A fg:#E2E2E3)\
+[](bg:#7A7A7A fg:#8A8A8A)\
+[](bg:#5F5F5F fg:#7A7A7A)\
+[$directory](bg:#5F5F5F fg:#E2E2E3)\
+[](bg:#2CA798 fg:#5F5F5F)\
+[](bg:#99EEDD fg:#2CA798)\
+[$c$elixir$elm$golang$haskell$java$julia$nodejs$nim$rust](bg:#99EEDD fg:#1E1E1E)\
+[](bg:#FF3370 fg:#99EEDD)\
+[$docker_context](bg:#FF3370 fg:#E2E2E3)\
+[](bg:#00FFDD fg:#FF3370)\
+[$git_branch](bg:#00FFDD fg:#1E1E1E)\
+[$git_status](bg:#00FFDD fg:#1E1E1E)\
+[](fg:#00FFDD)\
+[
+╭─](bold fg:#00FFDD)\
+[$time](fg:#E2E2E3)\
+[
+╰─ ](bold fg:#00FFDD)
+
+"""
+# Disable the blank line at the start of the prompt
+# add_newline = false
+
+# You can also replace your username with a neat symbol like  to save some space
+[username]
+show_always = true
+style_user = "bg:#8A8A8A"
+style_root = "bg:#8A8A8A"
+format = '$user '
+
+[directory]
+style = "bg:#7A7A7A"
+format = " $path "
+truncation_length = 3
+truncation_symbol = "…/"
+
+# Here is how you can shorten some long paths by text replacement
+# similar to mapped_locations in Oh My Posh:
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+# Keep in mind that the order matters. For example:
+# "Important Documents" = "  "
+# will not be replaced, because "Documents" was already substituted before.
+# So either put "Important Documents" before "Documents" or use the substituted version:
+# "Important  " = "  "
+
+[c]
+symbol = " "
+style = "bg:#99EEDD"
+format = ' $symbol ($version) '
+
+[docker_context]
+symbol = " "
+style = "bg:#2CA798"
+format = ' $symbol $context $path'
+
+[elixir]
+symbol = " "
+style = "bg:#99EEDD"
+format = ' $symbol ($version) '
+
+[elm]
+symbol = " "
+style = "bg:#99EEDD"
+format = ' $symbol ($version) '
+
+[git_branch]
+symbol = ""
+style = "bg:#5F5F5F"
+format = ' $symbol $branch '
+
+[git_status]
+style = "bg:#5F5F5F"
+format = '$all_status$ahead_behind '
+
+[golang]
+symbol = " "
+style = "bg:#99EEDD"
+format = ' $symbol ($version) '
+
+[haskell]
+symbol = " "
+style = "bg:#99EEDD"
+format = ' $symbol ($version) '
+
+[java]
+symbol = " "
+style = "bg:#99EEDD"
+format = ' $symbol ($version) '
+
+[julia]
+symbol = " "
+style = "bg:#99EEDD"
+format = ' $symbol ($version) '
+
+[nodejs]
+symbol = ""
+style = "bg:#99EEDD"
+format = ' $symbol ($version) '
+
+[nim]
+symbol = " "
+style = "bg:#99EEDD"
+format = ' $symbol ($version) '
+
+[python]
+style = "bg:#8A8A8A"
+format = '(\\($virtualenv\\) )'
+
+[rust]
+symbol = ""
+style = "bg:#99EEDD"
+format = ' $symbol ($version) '
+
+[time]
+disabled = false
+time_format = "%R" # Hour:Minute Format
+style = "bg:#00FFDD"
+format = ' $time '
+
+[character]
+success_symbol = "[❯](bold fg:#AC57FF)"
+error_symbol = "[❯](bold fg:#FF3370)"
