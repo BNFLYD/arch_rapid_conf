@@ -74,7 +74,7 @@ style = "bg:#99EEDD"
 format = ' $symbol ($version) '
 
 [git_branch]
-symbol = ""
+symbol = ""
 style = "bg:#5F5F5F"
 format = ' $symbol $branch '
 
@@ -97,18 +97,18 @@ symbol = " "
 style = "bg:#99EEDD"
 format = ' $symbol ($version) '
 
-[julia]
-symbol = " "
+[ocaml]
+symbol = ""
 style = "bg:#99EEDD"
 format = ' $symbol ($version) '
 
 [nodejs]
-symbol = ""
+symbol = "󰎙"
 style = "bg:#99EEDD"
 format = ' $symbol ($version) '
 
 [nim]
-symbol = " "
+symbol = ""
 style = "bg:#99EEDD"
 format = ' $symbol ($version) '
 

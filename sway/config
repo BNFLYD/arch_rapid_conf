@@ -1,7 +1,8 @@
+
 for_window {
  [title=""] floating enable, resize set 1280 720
- [title="wezterm"] floating disable
- [title="kitty"] floating disable
+ [title="wezterm"] floating disable, resize set 1280 720
+ [title="kitty"] floating disable, resize set 1280 720
 }
 
 # [title="game-*"] floating enable, resize set 1920 1080
