@@ -2,18 +2,22 @@ vim.cmd.highlight("clear")
 vim.g.colors_name = "sekaide"
 
 local C = {
-  bg = "#000000",
+  none = "none",
+  bg = "#0d0d0d",
   fg = "#c5bfae",
-  red = "#ff6363",
-  pink = "#ff3370",
+  txt = "#efede3",
+  red = "#fc3e57",
+  pink = "#e12885",
   purple = "#ac57ff",
   blue = "#7777ff",
-  cyan = "#00ffdd",
-  teal = "#2ca798",
-  gray = "#8a8a8a",
-  dark_gray = "#333333",
-  dark_bg = "#1a1a1a",
-  tab_bg = "#1e1e1e",
+  cyan = "#99eedd",
+  teal = "#47c8c0",
+  acc = "#55d1d0",
+  gray = "#cfcfcf",
+  dark_gray = "#bec8d1",
+  dark_bg = "#302f2c",
+  tab_bg = "#373b3e",
+  prueba = "#1eff1e",
 }
 
 ---@param name string
@@ -23,29 +27,29 @@ local function hl(name, opts)
 end
 
 -- Terminal colors
-vim.g.terminal_color_0 = "#000000"
+vim.g.terminal_color_0 = "#0d0d0d"
 vim.g.terminal_color_1 = "#ff6363"
-vim.g.terminal_color_2 = "#ff3370"
+vim.g.terminal_color_2 = "#fc3e57"
 vim.g.terminal_color_3 = "#7777ff"
 vim.g.terminal_color_4 = "#ac57ff"
-vim.g.terminal_color_5 = "#ff3370"
+vim.g.terminal_color_5 = "#fc3e57"
 vim.g.terminal_color_6 = "#99eedd"
 vim.g.terminal_color_7 = "#c5bfae"
-vim.g.terminal_color_8 = "#8a8a8a"
+vim.g.terminal_color_8 = "#cfcfcf"
 vim.g.terminal_color_9 = "#ff6363"
 vim.g.terminal_color_10 = "#00ffdd"
 vim.g.terminal_color_11 = "#00ffdd"
 vim.g.terminal_color_12 = "#00ffdd"
-vim.g.terminal_color_13 = "#ff3370"
+vim.g.terminal_color_13 = "#fc3e57"
 vim.g.terminal_color_14 = "#ac57ff"
 vim.g.terminal_color_15 = "#c5bfae"
 
 -- Editor
-hl("Normal", { fg = C.fg, bg = C.bg })
-hl("NormalNC", { fg = C.fg, bg = C.bg })
-hl("NormalSB", { fg = C.fg, bg = C.bg })
+hl("Normal", { fg = C.fg, bg = C.none })
+hl("NormalNC", { fg = C.fg, bg = C.none })
+hl("NormalSB", { fg = C.fg, bg = C.none })
 hl("Cursor", { fg = C.bg, bg = C.teal })
-hl("CursorLine", { bg = C.dark_bg })
+hl("CursorLine", { bg = C.bg })
 hl("CursorLineNr", { fg = C.teal, bold = true })
 hl("LineNr", { fg = C.dark_gray })
 hl("SignColumn", { bg = C.bg })
@@ -53,43 +57,43 @@ hl("ColorColumn", { bg = C.dark_bg })
 hl("Conceal", { fg = C.gray })
 hl("CursorColumn", { bg = C.dark_bg })
 hl("CursorIM", { fg = C.bg, bg = C.teal })
-hl("Directory", { fg = C.cyan })
+hl("Directory", { fg = C.pink })
 hl("EndOfBuffer", { fg = C.bg })
 hl("ErrorMsg", { fg = C.red, bold = true })
 hl("FoldColumn", { fg = C.gray, bg = C.bg })
 hl("Folded", { fg = C.gray, bg = C.dark_bg })
-hl("IncSearch", { fg = C.bg, bg = C.cyan, bold = true })
-hl("CurSearch", { fg = C.bg, bg = C.cyan, bold = true })
-hl("Substitute", { fg = C.bg, bg = C.pink, bold = true })
-hl("MatchParen", { fg = C.pink, bold = true, underline = true })
+hl("IncSearch", { fg = C.bg, bg = C.pink, bold = true })
+hl("CurSearch", { fg = C.bg, bg = C.pink, bold = true })
+hl("Substitute", { fg = C.bg, bg = C.acc, bold = true })
+hl("MatchParen", { fg = C.acc, bold = true, underline = true })
 hl("ModeMsg", { fg = C.fg })
-hl("MoreMsg", { fg = C.cyan })
+hl("MoreMsg", { fg = C.pink })
 hl("MsgArea", { fg = C.fg })
 hl("MsgSeparator", { fg = C.gray })
 hl("NonText", { fg = C.dark_gray })
-hl("Pmenu", { fg = C.fg, bg = C.tab_bg })
-hl("PmenuSel", { fg = C.bg, bg = C.pink, bold = true })
-hl("PmenuThumb", { bg = C.gray })
+hl("Pmenu", { fg = C.fg, bg = C.bg })
+hl("PmenuSel", { fg = C.bg, bg = C.acc, bold = true })
+hl("PmenuThumb", { bg = C.dark_bg })
 hl("PmenuSbar", { bg = C.dark_bg })
-hl("Question", { fg = C.cyan })
-hl("QuickFixLine", { fg = C.bg, bg = C.cyan, bold = true })
-hl("Search", { fg = C.bg, bg = C.cyan })
+hl("Question", { fg = C.pink })
+hl("QuickFixLine", { fg = C.bg, bg = C.pink, bold = true })
+hl("Search", { fg = C.bg, bg = C.pink })
 hl("SpecialKey", { fg = C.dark_gray })
 hl("SpellBad", { undercurl = true, sp = C.red })
 hl("SpellCap", { undercurl = true, sp = C.blue })
-hl("SpellLocal", { undercurl = true, sp = C.cyan })
+hl("SpellLocal", { undercurl = true, sp = C.pink })
 hl("SpellRare", { undercurl = true, sp = C.purple })
 hl("StatusLine", { fg = C.fg, bg = C.tab_bg })
 hl("StatusLineNC", { fg = C.gray, bg = C.dark_bg })
 hl("TabLine", { fg = C.gray, bg = C.dark_bg })
 hl("TabLineFill", { bg = C.bg })
-hl("TabLineSel", { fg = C.bg, bg = C.pink, bold = true })
-hl("Title", { fg = C.pink, bold = true })
+hl("TabLineSel", { fg = C.bg, bg = C.acc, bold = true })
+hl("Title", { fg = C.acc, bold = true })
 hl("VertSplit", { fg = C.dark_gray, bg = C.bg })
 hl("Visual", { bg = C.gray })
 hl("VisualNOS", { bg = C.gray })
 hl("WarningMsg", { fg = C.purple })
-hl("WildMenu", { fg = C.bg, bg = C.pink, bold = true })
+hl("WildMenu", { fg = C.bg, bg = C.acc, bold = true })
 hl("WinSeparator", { fg = C.dark_gray, bg = C.bg })
 hl("Whitespace", { fg = C.dark_gray })
 
@@ -100,37 +104,37 @@ hl("FloatTitle", { fg = C.pink, bg = C.dark_bg, bold = true })
 
 -- Syntax
 hl("Comment", { fg = C.gray, italic = true })
-hl("Constant", { fg = C.pink })
-hl("String", { fg = C.cyan })
-hl("Character", { fg = C.cyan })
-hl("Number", { fg = C.cyan })
-hl("Boolean", { fg = C.pink, bold = true })
-hl("Float", { fg = C.cyan })
-hl("Identifier", { fg = C.fg })
+hl("Constant", { fg = C.acc })
+hl("String", { fg = C.pink })
+hl("Character", { fg = C.pink })
+hl("Number", { fg = C.pink })
+hl("Boolean", { fg = C.acc, bold = true })
+hl("Float", { fg = C.pink })
+hl("Identifier", { fg = C.purple })
 hl("Function", { fg = C.purple })
-hl("Statement", { fg = C.pink })
-hl("Conditional", { fg = C.pink })
-hl("Repeat", { fg = C.pink })
-hl("Label", { fg = C.teal })
-hl("Operator", { fg = C.fg })
-hl("Keyword", { fg = C.pink })
-hl("Exception", { fg = C.pink })
+hl("Statement", { fg = C.acc })
+hl("Conditional", { fg = C.acc })
+hl("Repeat", { fg = C.acc })
+hl("Label", { fg = C.acc })
+hl("Operator", { fg = C.purple })
+hl("Keyword", { fg = C.acc })
+hl("Exception", { fg = C.acc })
 hl("PreProc", { fg = C.red })
-hl("Include", { fg = C.pink })
-hl("Define", { fg = C.pink })
+hl("Include", { fg = C.acc })
+hl("Define", { fg = C.acc })
 hl("Macro", { fg = C.red })
 hl("PreCondit", { fg = C.red })
 hl("Type", { fg = C.blue })
-hl("StorageClass", { fg = C.pink })
+hl("StorageClass", { fg = C.acc })
 hl("Structure", { fg = C.blue })
 hl("Typedef", { fg = C.blue })
 hl("Special", { fg = C.red })
-hl("SpecialChar", { fg = C.pink })
-hl("Tag", { fg = C.pink })
+hl("SpecialChar", { fg = C.acc })
+hl("Tag", { fg = C.acc })
 hl("Delimiter", { fg = C.gray })
 hl("SpecialComment", { fg = C.gray, italic = true })
 hl("Debug", { fg = C.red })
-hl("Underlined", { fg = C.cyan, underline = true })
+hl("Underlined", { fg = C.pink, underline = true })
 hl("Ignore", { fg = C.gray })
 hl("Error", { fg = C.red, bg = C.bg })
 hl("Todo", { fg = C.bg, bg = C.pink, bold = true })
@@ -263,7 +267,7 @@ hl("TelescopePromptTitle", { fg = C.pink, bg = C.dark_bg, bold = true })
 hl("TelescopePreviewTitle", { fg = C.cyan, bg = C.dark_bg, bold = true })
 hl("TelescopeResultsTitle", { fg = C.purple, bg = C.dark_bg, bold = true })
 hl("TelescopeSelection", { fg = C.bg, bg = C.pink, bold = true })
-hl("TelescopeSelectionCaret", { fg = C.pink })
+hl("TelescopeSelectionCaret", { fg = C.cyan })
 hl("TelescopeMatching", { fg = C.cyan, bold = true })
 hl("TelescopeMultiIcon", { fg = C.cyan })
 
@@ -348,26 +352,26 @@ hl("OilSymlink", { fg = C.cyan })
 hl("OilSpecial", { fg = C.purple })
 
 -- Snacks Dashboard
-hl("SnacksDashboardNormal", { fg = C.fg, bg = C.bg })
-hl("SnacksDashboardHeader", { fg = C.pink, bold = true })
-hl("SnacksDashboardKey", { fg = C.pink, bold = true })
-hl("SnacksDashboardDesc", { fg = C.cyan })
-hl("SnacksDashboardIcon", { fg = C.blue })
+hl("SnacksDashboardNormal", { fg = C.txt, bg = C.none })
+hl("SnacksDashboardHeader", { fg = C.fg, bold = true })
+hl("SnacksDashboardKey", { fg = C.cyan, bold = true })
+hl("SnacksDashboardDesc", { fg = C.txt })
+hl("SnacksDashboardIcon", { fg = C.fg })
 hl("SnacksDashboardFooter", { fg = C.gray })
-hl("SnacksDashboardSpecial", { fg = C.purple })
+hl("SnacksDashboardSpecial", { fg = C.teal })
 
 -- Lualine
 hl("lualine_a_normal", { fg = C.bg, bg = C.pink })
-hl("lualine_b_normal", { fg = C.fg, bg = C.tab_bg })
-hl("lualine_c_normal", { fg = C.fg, bg = C.bg })
+hl("lualine_b_normal", { fg = C.prueba, bg = C.tab_bg })
+hl("lualine_c_normal", { fg = C.prueba, bg = C.bg })
 hl("lualine_a_insert", { fg = C.bg, bg = C.teal })
-hl("lualine_b_insert", { fg = C.fg, bg = C.tab_bg })
+hl("lualine_b_insert", { fg = C.prueba, bg = C.tab_bg })
 hl("lualine_a_visual", { fg = C.bg, bg = C.purple })
-hl("lualine_b_visual", { fg = C.fg, bg = C.tab_bg })
+hl("lualine_b_visual", { fg = C.prueba, bg = C.tab_bg })
 hl("lualine_a_replace", { fg = C.bg, bg = C.red })
-hl("lualine_b_replace", { fg = C.fg, bg = C.tab_bg })
+hl("lualine_b_replace", { fg = C.prueba, bg = C.tab_bg })
 hl("lualine_a_command", { fg = C.bg, bg = C.blue })
-hl("lualine_b_command", { fg = C.fg, bg = C.tab_bg })
+hl("lualine_b_command", { fg = C.prueba, bg = C.tab_bg })
 
 -- Flash
 hl("FlashLabel", { fg = C.bg, bg = C.cyan, bold = true })
