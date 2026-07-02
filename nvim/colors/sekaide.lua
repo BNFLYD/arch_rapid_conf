@@ -88,9 +88,9 @@ hl("StatusLineNC", { fg = C.gray, bg = C.dark_bg })
 hl("TabLine", { fg = C.gray, bg = C.dark_bg })
 hl("TabLineFill", { bg = C.bg })
 hl("TabLineSel", { fg = C.bg, bg = C.acc, bold = true })
-hl("Title", { fg = C.acc, bold = true })
+hl("Title", { fg = C.cyan, bold = true })
 hl("VertSplit", { fg = C.dark_gray, bg = C.bg })
-hl("Visual", { bg = C.bg })
+hl("Visual", { bg = C.tab_bg })
 hl("VisualNOS", { bg = C.prueba })
 hl("WarningMsg", { fg = C.purple })
 hl("WildMenu", { fg = C.bg, bg = C.acc, bold = true })
@@ -98,9 +98,9 @@ hl("WinSeparator", { fg = C.dark_gray, bg = C.bg })
 hl("Whitespace", { fg = C.dark_gray })
 
 -- Float / Borders
-hl("NormalFloat", { fg = C.fg, bg = C.dark_bg })
-hl("FloatBorder", { fg = C.dark_gray, bg = C.dark_bg })
-hl("FloatTitle", { fg = C.cyan, bg = C.dark_bg, bold = true })
+hl("NormalFloat", { fg = C.fg, bg = C.none })
+hl("FloatBorder", { fg = C.fg, bg = C.none })
+hl("FloatTitle", { fg = C.cyan, bg = C.none, bold = true })
 
 -- Syntax
 hl("Comment", { fg = C.gray, italic = true })
@@ -272,11 +272,11 @@ hl("TelescopeMatching", { fg = C.cyan, bold = true })
 hl("TelescopeMultiIcon", { fg = C.cyan })
 
 -- WhichKey
-hl("WhichKey", { fg = C.acc, bold = true })
+hl("WhichKey", { fg = C.cyan, bold = true })
 hl("WhichKeyDesc", { fg = C.txt })
 hl("WhichKeyGroup", { fg = C.teal })
 hl("WhichKeySeparator", { fg = C.fg })
-hl("WhichKeyBorder", { fg = C.fg, bg = C.dark_bg })
+hl("WhichKeyBorder", { fg = C.fg, bg = C.none })
 hl("WhichKeyFloat", { bg = C.dark_bg })
 
 -- Notify
