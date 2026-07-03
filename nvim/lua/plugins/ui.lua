@@ -211,14 +211,30 @@ return {
         desc = "Find Buffers",
       },
       {
-        "gb",
+        "<leader>gb",
         function()
-          for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-            if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted then
-              vim.api.nvim_buf_delete(buf, { force = false })
+          for _, win in ipairs(vim.api.nvim_list_wins()) do
+            if win ~= vim.api.nvim_get_current_win() then
+              vim.api.nvim_win_close(win, true)
             end
           end
-          Snacks.dashboard.open()
+          local current = vim.api.nvim_get_current_buf()
+          for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+            if
+              vim.api.nvim_buf_is_valid(buf)
+              and vim.bo[buf].buflisted
+              and buf ~= current
+              and not vim.bo[buf].modified
+            then
+              pcall(vim.api.nvim_buf_delete, buf, { force = false })
+            end
+          end
+          local buf = vim.api.nvim_create_buf(false, true)
+          ---@diagnostic disable-next-line: missing-fields
+          Snacks.dashboard.open({
+            buf = buf,
+            win = vim.api.nvim_get_current_win(),
+          })
         end,
         desc = "Go Home / Dashboard",
       },
