@@ -213,6 +213,9 @@ return {
       {
         "<leader>gb",
         function()
+          if vim.bo.filetype == "snacks_dashboard" then
+            return
+          end
           for _, win in ipairs(vim.api.nvim_list_wins()) do
             if win ~= vim.api.nvim_get_current_win() then
               vim.api.nvim_win_close(win, true)
@@ -236,7 +239,7 @@ return {
             win = vim.api.nvim_get_current_win(),
           })
         end,
-        desc = "Go Home / Dashboard",
+        desc = "Go Back / Start Menu",
       },
     },
     opts = {
