@@ -5,7 +5,7 @@
   },
   "display": { "disableLinewrap": true },
   "logo": {
-         "type": "auto",
+         "type": "__LOGO_TYPE__",
          "source": "~/.config/fastfetch/logos/current_logo",
          "width": 47
   },
