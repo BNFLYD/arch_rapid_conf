@@ -1,11 +1,11 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json", 
-  "display": { 
+  "display": {
     "disableLinewrap": true,
     "separator": "  "
   },
   "logo": {
-         "type": "kitty",
+         "type": "auto",
          "source": "~/.config/fastfetch/logos/current_logo",
          "width": 37
   },
@@ -24,7 +24,7 @@
     { "type": "cpu", "key": "󰻠" },
     { "type": "gpu", "key": "󰾲" },
     { "type": "memory", "key": "" },
-    { "type": "wm", "key": " " },
-    { "type": "locale", "key": "󰸲" },
+    { "type": "wm", "key": "" },
+    { "type": "locale", "key": "󰌌" }
   ]
 }

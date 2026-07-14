@@ -45,9 +45,9 @@ vim.g.terminal_color_14 = "#ac57ff"
 vim.g.terminal_color_15 = "#c5bfae"
 
 -- Editor
-hl("Normal", { fg = C.fg, bg = C.none })
-hl("NormalNC", { fg = C.fg, bg = C.none })
-hl("NormalSB", { fg = C.fg, bg = C.none })
+hl("Normal", { fg = C.txt, bg = C.none })
+hl("NormalNC", { fg = C.txt, bg = C.none })
+hl("NormalSB", { fg = C.txt, bg = C.none })
 hl("Cursor", { fg = C.bg, bg = C.teal })
 hl("CursorLine", { bg = C.bg })
 hl("CursorLineNr", { fg = C.teal, bold = true })
