@@ -35,26 +35,22 @@
     "on-click": "wofi --show drun",
     "tooltip": false
   },
-  "tray": {
-    "spacing": 10,
-    "tooltip": false
-  },
   "clock": {
-    "format": "󰅐 {:%H:%M}",
+    "format": "{:%H:%M}",
     "tooltip": false
   },
   "network": {
-    "format-wifi": " {bandwidthDownBits}",
-    "format-ethernet": " {bandwidthDownBits}",
-    "format-disconnected": "󰤮 No Network",
+    "format-wifi": "  {bandwidthDownBits}",
+    "format-ethernet": "  {bandwidthDownBits}",
+    "format-disconnected": "󰖟 N/A",
     "interval": 5,
     "tooltip": false
   },
-  "pipewire": {
+  "pulseaudio": {
     "scroll-step": 5,
     "max-volume": 150,
-    "format": "{icon} {volume}%",
-    "format-bluetooth": "{icon} {volume}%",
+    "format": "{icon} {volume}",
+    "format-bluetooth": "{icon} {volume}",
     "format-icons": [
       "",
       "",

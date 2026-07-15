@@ -10,7 +10,7 @@
 
 window#waybar {
   /* Linear gradients are used because it makes less harsh rounded border radius, gtk bug :p */
-  background-color: rgba(13, 13, 13, 0.7);
+  background-color: rgba(12, 12, 12, 0.7);
   border-radius: 7px;
   padding: 0px;
   border-style: none;
@@ -24,7 +24,6 @@ window#waybar {
 #workspaces,
 #pulseaudio {
   background-image: linear-gradient(to bottom, #c5bfae 100%);
-
   margin: 6px;
   margin-right: 6px;
   padding: 4px 8px;
@@ -40,8 +39,7 @@ window#waybar {
 }
 
 #pulseaudio:hover {
-  background-image: linear-gradient(to bottom, #99eedd 100%);
-  color: #0d0d0d;
+  color: #1d998b;
   transition-duration: 120ms;
 }
 
@@ -50,8 +48,7 @@ window#waybar {
   transition-duration: 120ms;
 }
 #custom-applauncher:hover {
-  background-image: linear-gradient(to bottom, #99eedd 100%);
-  color: #0d0d0d;
+  color: #1d998b;
   transition-duration: 120ms;
 }
 
@@ -62,7 +59,6 @@ window#waybar {
 }
 #tray menu menuitem {
   background-image: linear-gradient(to bottom, #302f2c 100%);
-
   margin: 3px;
   color: #302f2c;
   border-radius: 4px;
@@ -71,7 +67,7 @@ window#waybar {
 }
 #tray menu menuitem:hover {
   background-image: linear-gradient(to bottom, #302f2c 100%);
-  color: #99eedd;
+  color: #1eff1e;
   font-weight: bold;
 }
 
@@ -87,14 +83,14 @@ window#waybar {
 
 #workspaces button:hover {
   transition-duration: 120ms;
-  color: #dad4c3;
+  color: #cfcfcf;
 }
 #workspaces button.focused {
-  color: #99eedd;
+  color: #1d998b;
   font-weight: bold;
 }
 #workspaces button.active {
-  color: #99eedd;
+  color: #1d998b;
   font-weight: bold;
 }
 #workspaces button.urgent {
