@@ -10,8 +10,8 @@
 
 window#waybar {
   /* Linear gradients are used because it makes less harsh rounded border radius, gtk bug :p */
-  background-image: linear-gradient(to bottom, #141216 100%);
-  border-radius: 14px;
+  background-color: rgba(13, 13, 13, 0.7);
+  border-radius: 7px;
   padding: 0px;
   border-style: none;
 }
@@ -23,13 +23,13 @@ window#waybar {
 #tray,
 #workspaces,
 #pulseaudio {
-  background-image: linear-gradient(to bottom, #27232b 100%);
+  background-image: linear-gradient(to bottom, #c5bfae 100%);
 
   margin: 6px;
-  margin-right: 0px;
+  margin-right: 6px;
   padding: 4px 8px;
-  border-radius: 8px;
-  color: #d8cab8;
+  border-radius: 7px;
+  color: #302f2c;
 
   border-style: none;
   transition-duration: 120ms;
@@ -40,8 +40,8 @@ window#waybar {
 }
 
 #pulseaudio:hover {
-  background-image: linear-gradient(to bottom, #ac82e9 100%);
-  color: #141216;
+  background-image: linear-gradient(to bottom, #99eedd 100%);
+  color: #0d0d0d;
   transition-duration: 120ms;
 }
 
@@ -50,28 +50,28 @@ window#waybar {
   transition-duration: 120ms;
 }
 #custom-applauncher:hover {
-  background-image: linear-gradient(to bottom, #ac82e9 100%);
-  color: #141216;
+  background-image: linear-gradient(to bottom, #99eedd 100%);
+  color: #0d0d0d;
   transition-duration: 120ms;
 }
 
 #tray menu {
-  background-color: #141216;
-  color: #d8cab8;
+  background-color: #0d0d0d;
+  color: #302f2c;
   padding: 4px;
 }
 #tray menu menuitem {
-  background-image: linear-gradient(to bottom, #27232b 100%);
+  background-image: linear-gradient(to bottom, #302f2c 100%);
 
   margin: 3px;
-  color: #d8cab8;
+  color: #302f2c;
   border-radius: 4px;
   border-style: solid;
-  border-color: #27232b;
+  border-color: #302f2c;
 }
 #tray menu menuitem:hover {
-  background-image: linear-gradient(to bottom, #27232b 100%);
-  color: #ac82e9;
+  background-image: linear-gradient(to bottom, #302f2c 100%);
+  color: #99eedd;
   font-weight: bold;
 }
 
@@ -80,21 +80,21 @@ window#waybar {
   all: initial;
   min-width: 0;
   font-weight: bold;
-  color: #d8cab8;
+  color: #302f2c;
   margin-right: 0.2cm;
   margin-left: 0.2cm;
 }
 
 #workspaces button:hover {
   transition-duration: 120ms;
-  color: #8f56e1;
+  color: #dad4c3;
 }
 #workspaces button.focused {
-  color: #ac82e9;
+  color: #99eedd;
   font-weight: bold;
 }
 #workspaces button.active {
-  color: #ac82e9;
+  color: #99eedd;
   font-weight: bold;
 }
 #workspaces button.urgent {

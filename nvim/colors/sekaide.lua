@@ -8,7 +8,7 @@ local C = {
   txt = "#dad4c3",
   red = "#fc3e57",
   pink = "#df4d96",
-  purple = "#ac57ff",
+  purple = "#ac82e9",
   blue = "#7777ff",
   cyan = "#99eedd",
   teal = "#47c8c0",
@@ -18,6 +18,7 @@ local C = {
   dark_bg = "#302f2c",
   tab_bg = "#373b3e",
   prueba = "#1eff1e",
+  steel = "#8f56e1",
 }
 
 ---@param name string
@@ -98,7 +99,7 @@ hl("WinSeparator", { fg = C.dark_gray, bg = C.bg })
 hl("Whitespace", { fg = C.dark_gray })
 
 -- Float / Borders
-hl("NormalFloat", { fg = C.fg, bg = C.none })
+hl("NormalFloat", { fg = C.txt, bg = C.none })
 hl("FloatBorder", { fg = C.fg, bg = C.none })
 hl("FloatTitle", { fg = C.cyan, bg = C.none, bold = true })
 
