@@ -12,6 +12,8 @@ window#waybar {
   /* Linear gradients are used because it makes less harsh rounded border radius, gtk bug :p */
   background-color: rgba(12, 12, 12, 0.7);
   border-radius: 7px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
   padding: 0px;
   border-style: none;
 }
