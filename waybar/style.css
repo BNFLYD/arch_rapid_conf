@@ -29,7 +29,6 @@ window#waybar {
   padding: 4px 8px;
   border-radius: 7px;
   color: #302f2c;
-
   border-style: none;
   transition-duration: 120ms;
 }

@@ -9,8 +9,8 @@
   color: #c5bfae;
 
   /*Linear gradient background instead of standard background, because it makes cleaner border-radius cuts, issa bug :p*/
-  background-image: linear-gradient(to bottom, #141216 100%);
-  border-radius: 14px;
+ background-color: rgba(12, 12, 12, 0.7);
+ border-radius: 14px;
 }
 #scroll {
   border-top-style: solid;
