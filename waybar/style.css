@@ -1,4 +1,3 @@
-
 * {
   /* General taskbar font, I like maple mono ^-^*/
   font-family: JetBrainsMono Nerd Font;
@@ -58,6 +57,7 @@ window#waybar {
   color: #302f2c;
   padding: 4px;
 }
+
 #tray menu menuitem {
   background-image: linear-gradient(to bottom, #302f2c 100%);
   margin: 3px;
