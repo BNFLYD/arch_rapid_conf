@@ -5,7 +5,7 @@
     "separator": "  "
   },
   "logo": {
-         "type": "kitty",
+         "type": "auto",
          "source": "~/.config/fastfetch/logos/current_logo",
          "width": 37
   },
