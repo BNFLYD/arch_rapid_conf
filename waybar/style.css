@@ -1,0 +1,110 @@
+* {
+  /* General taskbar font, I like maple mono ^-^*/
+  font-family: JetBrainsMono Nerd Font;
+  border-radius: 8;
+  font-size: 14px;
+  padding: 0px;
+  background: transparent;
+}
+
+window#waybar {
+  /* Linear gradients are used because it makes less harsh rounded border radius, gtk bug :p */
+  background-color: rgba(12, 12, 12, 0.7);
+  border-radius: 7px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  padding: 0px;
+  border-style: none;
+}
+
+#battery,
+#network,
+#clock,
+#custom-applauncher,
+#custom-cava-left, #custom-cava-right,
+#tray,
+#workspaces,
+#pulseaudio {
+  background-image: linear-gradient(to bottom, #c5bfae 100%);
+  margin: 6px;
+  margin-right: 6px;
+  padding: 4px 8px;
+  border-radius: 7px;
+  color: #302f2c;
+  border-style: none;
+  transition-duration: 120ms;
+}
+
+#clock {
+  margin-right: 6px;
+}
+
+#custom-cava-left,
+#custom-cava-right {
+  background: transparent;
+  color: #c5bfae;
+  font-size: 12px;
+  padding: 0px 0px;
+  letter-spacing: 7px;
+}
+
+#pulseaudio:hover {
+  color: #1d998b;
+  transition-duration: 120ms;
+}
+
+#custom-applauncher {
+  font-weight: bold;
+  transition-duration: 120ms;
+}
+#custom-applauncher:hover {
+  color: #1d998b;
+  transition-duration: 120ms;
+}
+
+#tray menu {
+  background-color: #0d0d0d;
+  color: #302f2c;
+  padding: 4px;
+}
+
+#tray menu menuitem {
+  background-image: linear-gradient(to bottom, #302f2c 100%);
+  margin: 3px;
+  color: #302f2c;
+  border-radius: 4px;
+  border-style: solid;
+  border-color: #302f2c;
+}
+#tray menu menuitem:hover {
+  background-image: linear-gradient(to bottom, #302f2c 100%);
+  color: #1eff1e;
+  font-weight: bold;
+}
+
+#workspaces button {
+  transition-duration: 100ms;
+  all: initial;
+  min-width: 0;
+  font-weight: bold;
+  color: #302f2c;
+  margin-right: 0.2cm;
+  margin-left: 0.2cm;
+}
+
+#workspaces button:hover {
+  transition-duration: 120ms;
+  color: #cfcfcf;
+}
+#workspaces button.focused {
+  color: #1d998b;
+  font-weight: bold;
+}
+#workspaces button.active {
+  color: #1d998b;
+  font-weight: bold;
+}
+#workspaces button.urgent {
+  color: #fcb167;
+}
+

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json", 
+  "display": {
+    "disableLinewrap": true,
+    "separator": "  "
+  },
+  "logo": {
+         "type": "__LOGO_TYPE__",
+         "source": "~/.config/fastfetch/logos/current_logo",
+         "width": 37
+  },
+  "modules": [
+    { "type": "custom", "format": "Sos lo que haces, no lo que decis que vas a hacer" },
+    { "type": "custom", "format": "no dejes de hacer, porque la magia que necesitas" },
+    { "type": "custom", "format": "esta en el trabajo que evitas, y que nunca te" },
+    { "type": "custom", "format": "frene la insertidumbre, porque la mejora del mundo" },
+    { "type": "custom", "format": "depende de tu taquicardia" },
+    { "type": "custom", "format": "━━━ Sistema ━━━" },
+    { "type": "os", "key": "" },
+    { "type": "kernel", "key": "󰌽" },
+    { "type": "packages", "key": "󰏖" },
+    { "type": "shell", "key": "" }, 
+    { "type": "terminal", "key": "" },
+    { "type": "cpu", "key": "󰻠" },
+    { "type": "gpu", "key": "󰾲" },
+    { "type": "memory", "key": "" },
+    { "type": "wm", "key": "" },
+    { "type": "locale", "key": "󰌌" }
+  ]
+}
