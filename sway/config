@@ -221,6 +221,14 @@ bar {
 
 }
 
+# Iniciar swaync
+exec swaync
+
+# Atajos útiles (opcional, pero muy cómodos)
+bindsym $mod+Shift+n exec swaync-client -t -sw          # toggle panel
+bindsym $mod+Shift+m exec swaync-client -Dm             # silenciar por un tiempo
+bindsym $mod+Shift+u exec swaync-client -du             # cerrar todas las notificaciones
+
 default_border pixel 1
 default_floating_border pixel 5
 

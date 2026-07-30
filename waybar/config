@@ -18,6 +18,7 @@
     "custom/cava-right"
   ],
   "modules-right": [
+    "tray",
     "network",
     "pulseaudio",
     "clock"
@@ -61,6 +62,10 @@
     "exec": "~/.config/waybar/scripts/cava-right.sh",
     "tooltip": false,
     "continuous": true
+  },
+  "tray": {
+    "icon-size": 16,
+    "spacing": 8
   },
   "pulseaudio": {
     "scroll-step": 5,

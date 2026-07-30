@@ -26,8 +26,8 @@ window#waybar {
 #workspaces,
 #pulseaudio {
   background-image: linear-gradient(to bottom, #c5bfae 100%);
-  margin: 6px;
-  margin-right: 6px;
+  margin: 7px;
+  margin-right: 7px;
   padding: 4px 8px;
   border-radius: 7px;
   color: #302f2c;
@@ -36,7 +36,7 @@ window#waybar {
 }
 
 #clock {
-  margin-right: 6px;
+  margin-right: 7px;
 }
 
 #custom-cava-left,
@@ -65,8 +65,8 @@ window#waybar {
 #custom-runcat {
     font-family: 'runcat';
     font-size: 37px;
-    margin-left: 6px;
-    margin-right: 6px;
+    margin-left: 7px;
+    margin-right: 7px;
 }
 #tray menu {
   background-color: #0d0d0d;
