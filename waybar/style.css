@@ -62,6 +62,12 @@ window#waybar {
   transition-duration: 120ms;
 }
 
+#custom-runcat {
+    font-family: 'runcat';
+    font-size: 37px;
+    margin-left: 6px;
+    margin-right: 6px;
+}
 #tray menu {
   background-color: #0d0d0d;
   color: #302f2c;

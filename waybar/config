@@ -9,7 +9,8 @@
   "margin-left": 7,
   "modules-left": [
     "hyprland/workspaces",
-    "sway/workspaces"
+    "sway/workspaces",
+    "custom/runcat"
   ],
   "modules-center": [
     "custom/cava-left",
@@ -35,6 +36,10 @@
     "format": "〇",
     "on-click": "wofi --show drun",
     "tooltip": false
+  },
+  "custom/runcat": {
+    "exec": "~/.config/waybar/modules/runcat-text/main.py",
+    "return-type": "json"
   },
   "clock": {
     "format": "{:%H:%M}",
