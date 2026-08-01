@@ -11,7 +11,13 @@ config.normalize_output_to_unicode_nfc = true
 
 config.keys = bindings.keys
 config.mouse_bindings = bindings.mouse_bindings
-config.font = wezterm.font("JetBrainsMono Nerd Font")
+config.font = wezterm.font("")
+config.font = wezterm.font_with_fallback({
+	"JetBrainsMono Nerd Font", -- Fuente principal
+	"M PLUS 1 Code Regular", -- Japones
+	"Symbols Nerd Font", -- Para iconos de Nerd Fonts
+	"Noto Color Emoji", -- Para emojis
+})
 config.colors = themes.sekaide
 config.enable_scroll_bar = false
 config.hide_tab_bar_if_only_one_tab = true
