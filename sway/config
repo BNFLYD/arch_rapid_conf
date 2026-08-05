@@ -215,11 +215,9 @@ client.focused_inactive #00000020   #1e1e1e   #888888
 # No enfocada: casi invisible
 client.unfocused        #00000020   #1e1e1e   #555555
 
-bar {
-
-  swaybar_command waybar
-
-}
+# Iniciar wayle (barra, notificaciones, OSD) — reemplaza a waybar
+# Plan: bitacora/planes/reparar-barra-wayle.md
+exec --no-startup-id wayle shell
 
 # Iniciar swaync
 exec swaync

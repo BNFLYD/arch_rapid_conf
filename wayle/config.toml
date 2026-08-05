@@ -1,1 +1,116 @@
-# Wayle configuration file
+# Wayle configuration — réplica de waybar (fix 2026-08-04)
+# Plan: bitacora/planes/reparar-barra-wayle.md
+# Compositor: sway | Wayle 0.7.0
+# NOTA UNIDADES: los spacing de wayle son en rem; 1 rem = 16px con scale=1.
+#   waybar 7px = 0.4375 rem | 8px = 0.5 rem | 2px = 0.125 rem
+
+[bar]
+location = "bottom"
+button-label-size = 0.94   # ≈ 14px
+scale = 1.0
+inset-edge = 0.0            # FIX R1: 0 = pegado al borde inferior (waybar margin-bottom 0)
+inset-ends = 0.4375         # FIX R2: 7px a cada lado (antes 7.0 rem = 112px)
+padding = 0.4375            # 7px de hueco interno vertical (módulos tipo waybar con margin 7px)
+padding-ends = 0.7          # sin padding interno horizontal
+module-gap = 0.7          # 2px entre módulos (waybar spacing 0)
+bg = "#0c0c0c"              # rgba(12,12,12,0.7) → bg + background-opacity 70
+background-opacity = 70
+button-variant = "basic"    # pill única icono+label (waybar no tenía contenedor de icono)
+button-label-padding = 0.5   # 2px por lado
+button-gap = 0.75             # 2px entre icono y texto
+button-border-location = "none"   # waybar sin bordes
+button-label-weight = "normal"    # waybar no usaba semibold ("regular" no existe en el schema)
+button-rounding = "sm"
+
+[[bar.layout]]
+monitor = "*"
+left = [{ module = "custom-runcat", class = "runcat" }]
+center = [
+  { module = "custom-cava-left",  class = "cava-left" },
+  { module = "custom-applauncher", class = "applauncher" },
+  { module = "custom-cava-right", class = "cava-right" },
+]
+right = ["systray", "netstat", "volume", "clock"]
+
+# --- Cava: DOS barras independientes (FIX R6), igual que waybar ---
+# Scripts copiados a wayle/scripts con nivel 0 = U+2007 (ancho de celda estable):
+# plan estabilizar-ancho-cava-wayle.md
+[[modules.custom]]
+id = "cava-left"
+mode = "watch"
+restart-policy = "on-exit"
+command = "~/.config/wayle/scripts/cava-left.sh"
+icon-show = false
+button-bg-color = "transparent"
+label-color = "#c5bfae"
+border-show = false
+
+[[modules.custom]]
+id = "cava-right"
+mode = "watch"
+restart-policy = "on-exit"
+command = "~/.config/wayle/scripts/cava-right.sh"
+icon-show = false
+button-bg-color = "transparent"
+label-color = "#c5bfae"
+border-show = false
+
+# --- Runcat (watch mode: 1 línea = 1 update; el script emite JSON) ---
+[[modules.custom]]
+id = "runcat"
+mode = "watch"
+restart-policy = "on-exit"
+command = "~/.config/waybar/modules/runcat-text/.venv/bin/python ~/.config/waybar/modules/runcat-text/main.py"
+icon-show = false
+button-bg-color = "transparent"
+label-color = "#c5bfae"
+border-show = false
+
+# --- App launcher ---
+[[modules.custom]]
+id = "applauncher"
+format = " 〇 "
+left-click = "wofi --show drun"
+icon-show = false
+button-bg-color = "#c5bfae"
+label-color = "#302f2c"
+border-show = false
+
+# --- Red: icono wifi + bandwidth (FIX R5) ---
+[modules.netstat]
+format = "{{ down_mib }} MiB/s"
+interface = "auto"
+icon-name = "cm-wireless-signal-excellent-symbolic"
+icon-show = true
+icon-color = "#302f2c"
+label-color = "#302f2c"
+button-bg-color = "#c5bfae"
+border-show = false
+
+# --- Volumen ---
+[modules.volume]
+format = "{{ percent }}%"
+left-click = "pavucontrol"
+middle-click = ""
+level-icons = ["ld-volume-symbolic", "ld-volume-1-symbolic", "ld-volume-2-symbolic"]
+icon-muted = "ld-volume-x-symbolic"
+icon-color = "#302f2c"
+label-color = "#302f2c"
+button-bg-color = "#c5bfae"
+border-show = false
+
+# --- Reloj ---
+[modules.clock]
+format = "%H:%M"
+icon-show = false
+label-color = "#302f2c"
+button-bg-color = "#c5bfae"
+border-show = false
+
+# --- Systray ---
+[modules.systray]
+icon-scale = 1.0
+item-gap = 0.5              # FIX R3: 8px (antes 8.0 rem = 128px)
+internal-padding = 0.0
+button-bg-color = "#c5bfae"
+border-show = false

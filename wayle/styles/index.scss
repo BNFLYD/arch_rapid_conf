@@ -1,2 +1,59 @@
-// Custom Wayle styles. Anything here overrides the built-in styling.
-// Use @import "name" to bring in _name.scss from this folder.
+// Wayle styles — réplica de waybar (fix 2026-08-04)
+// Plan: bitacora/planes/reparar-barra-wayle.md
+// El fondo visible del botón vive en `> button.toggle` (SCSS estático), no en `.bar-button`.
+// Los colores de módulos van por config.toml (button-bg-color/label-color/icon-color).
+
+.bar {
+  font-family: "JetBrainsMono Nerd Font";
+  font-size: 14px;
+  border-radius: 7px 7px 0 0; // 7px arriba, recto abajo (waybar)
+}
+
+.bar.bottom {
+  margin-top: 1px;   // 1px transparente arriba del contenedor oscuro
+}
+
+// Cava: sin fondo, beige, fuente chica con letter-spacing (waybar #custom-cava-*)
+.cava-left, .cava-right {
+  > .bar-button > button.toggle { background-color: transparent; }
+  .bar-button-label { font-size: 12px; letter-spacing: 7px; }
+  // FIX 2026-08-04: ancho FIJO para que las barras NO desplacen al applauncher del centro.
+  // El FIGURE SPACE (\u2007) del script no dio celda completa en la fuente real, asi que
+  // aunque siempre hay 15 chars, el label seguia respirando. Con min-width constante en
+  // AMBOS labels, cava-left == cava-right siempre -> el 〇 queda clavado al centro.
+  // 15 celdas JetBrainsMono@12px (~7.2px/celda)=108px + 14 gaps letter-spacing (7px)=98px
+  // ≈206px; pero midiendo en pantalla (1920x1080) las barras activas ocupan hasta ~253px,
+  // asi que el min-width debe superar ese maximo para que AMBOS cava queden fijos en el
+  // peor caso (un canal a todo bar + el otro mudo): si fuera menor, el mask corto creceria
+  // y desplazaria al 〇. Se usa 260px (por encima del maximo observado).
+  // NOTA: GTK NO soporta la unidad 'ch' en calc (emite 'ch is not a valid unit'); usar px.
+  .bar-button-content,
+  .bar-button-label {
+    min-width: 260px;
+  }
+}
+
+// Runcat: fuente dedicada, grande, sin fondo
+.runcat {
+  > .bar-button > button.toggle { background-color: transparent; }
+}
+
+.bar .runcat .bar-button-label { font-family: "runcat"; font-size: 24px; }
+
+// Runcat: sin margins top/bottom (solo este módulo)
+.bar.bottom .bar-section.bar-left {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.bar .runcat.bar-button .bar-button-content {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top:0;
+  padding-top:0;
+
+}
+
+// App launcher: bold + hover teal (waybar)
+.applauncher .bar-button-label { font-weight: bold; }
+.applauncher:hover .bar-button-label { color: #1d998b; }
