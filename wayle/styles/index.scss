@@ -38,14 +38,13 @@
   > .bar-button > button.toggle { background-color: transparent; }
 }
 
-.bar .runcat .bar-button-label { font-family: "runcat"; font-size: 24px; }
-
+.bar .runcat .bar-button-label { font-family: "runcat"; font-size: 37px; }
 // Runcat: sin margins top/bottom (solo este módulo)
 .bar.bottom .bar-section.bar-left {
   margin-top: 0;
   margin-bottom: 0;
 }
-
+//
 .bar .runcat.bar-button .bar-button-content {
   margin-top: 0;
   margin-bottom: 0;
