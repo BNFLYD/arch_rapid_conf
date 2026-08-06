@@ -56,3 +56,26 @@
 // App launcher: bold + hover teal (waybar)
 .applauncher .bar-button-label { font-weight: bold; }
 .applauncher:hover .bar-button-label { color: #1d998b; }
+
+// Estilo del panel del dashboard
+.dashboard-dropdown,
+.dropdown.dashboard-dropdown {
+  background-color: #c5bfae;
+  border-radius: 10px;
+  border: 1px solid #302f2c;
+  color: #302f2c;
+}
+
+// Botones dentro del dashboard (inversion de paleta: pill oscuro sobre panel claro)
+.dashboard-dropdown button {
+  background-color: #302f2c;
+  color: #c5bfae;
+  border-radius: 6px;
+  transition-duration: 120ms;   // coincide con el hover de waybar
+}
+
+// Hover: acento teal con texto de paleta (sin blanco). Contraste 3.8:1.
+.dashboard-dropdown button:hover {
+  background-color: #1d998b;
+  color: #302f2c;
+}

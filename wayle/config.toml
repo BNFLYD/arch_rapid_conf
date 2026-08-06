@@ -71,6 +71,7 @@ border-show = false
 id = "applauncher"
 format = " 〇 "
 left-click = "wofi --show drun"
+right-click = "dropdown:dashboard"
 icon-show = false
 button-bg-color = "#c5bfae"
 label-color = "#302f2c"
