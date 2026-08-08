@@ -57,25 +57,39 @@
 .applauncher .bar-button-label { font-weight: bold; }
 .applauncher:hover .bar-button-label { color: #1d998b; }
 
-// Estilo del panel del dashboard
-.dashboard-dropdown,
-.dropdown.dashboard-dropdown {
-  background-color: #c5bfae;
-  border-radius: 10px;
-  border: 1px solid #302f2c;
-  color: #302f2c;
-}
+// Dashboard dropdown: paleta sekaide — negro, beige, turquesa sutil.
+// Todo el interior sale de variables CSS (--bg-*, --fg-*, --accent, --status-*);
+// se redefinen en el scope del root (.dashboard-dropdown = popover real) y el
+// azul/naranja del theme desaparece. Translucidez SOLO en el fondo (alpha), no
+// via dropdown-opacity (eso transluciria texto e iconos tambien).
+.dashboard-dropdown {
+  // Superficies: negro translúcido como la barra; pills beige-oscuro
+  --bg-surface: rgba(13, 13, 13, 0.72);   // panel
+  --bg-elevated: rgba(13, 13, 13, 0.9);   // header
+  --bg-overlay: #302f2c;                  // pills/chips (sekaide dark_bg)
+  --bg-hover: #3a3834;
+  --bg-active: #3a3834;
+  --border-subtle: rgba(48, 47, 44, 0.5);
+  --border-default: rgba(48, 47, 44, 0.6);
 
-// Botones dentro del dashboard (inversion de paleta: pill oscuro sobre panel claro)
-.dashboard-dropdown button {
-  background-color: #302f2c;
-  color: #c5bfae;
-  border-radius: 6px;
-  transition-duration: 120ms;   // coincide con el hover de waybar
-}
+  // Textos beige
+  --fg-default: #dad4c3;                  // sekaide txt
+  --fg-muted: #c5bfae;                    // sekaide fg
+  --fg-subtle: rgba(197, 191, 174, 0.55);
+  --fg-on-accent: #0d0d0d;
 
-// Hover: acento teal con texto de paleta (sin blanco). Contraste 3.8:1.
-.dashboard-dropdown button:hover {
-  background-color: #1d998b;
-  color: #302f2c;
+  // Acento turquesa sutil (en vez del naranja del theme)
+  --accent: #55d1d0;                      // sekaide acc
+  --accent-subtle: rgba(85, 209, 208, 0.15);
+  --accent-hover: #7ee0df;
+
+  // Estados neutros; solo la alarma es roja
+  --status-success: #c5bfae;
+  --status-warning: #c5bfae;
+  --status-error: #fc3e57;                // sekaide red
+  --status-info: #c5bfae;
+  --status-success-subtle: rgba(197, 191, 174, 0.15);
+  --status-warning-subtle: rgba(197, 191, 174, 0.15);
+  --status-error-subtle: rgba(252, 62, 87, 0.15);
+  --status-info-subtle: rgba(197, 191, 174, 0.15);
 }
