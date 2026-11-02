@@ -1,0 +1,16 @@
+
+--- 2026-11-01T21:11:48.454Z debug
+🪵  Writing logs to "/home/mori/.config/.wrangler/logs/wrangler-2026-11-01_21-11-47_364.log"
+---
+
+--- 2026-11-01T21:11:48.454Z debug
+local dev variables file not found at ".dev.vars". Continuing... For more details, refer to https://developers.cloudflare.com/workers/wrangler/system-environment-variables/
+---
+
+--- 2026-11-01T21:11:48.457Z log
+Using secrets defined in .env
+---
+
+--- 2026-11-01T21:11:48.458Z debug
+.env file not found at "/home/mori/Projects/HOD-software/crow-clone/.env.local". Continuing... For more details, refer to https://developers.cloudflare.com/workers/wrangler/system-environment-variables/
+---

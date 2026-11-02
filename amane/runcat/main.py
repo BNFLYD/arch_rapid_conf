@@ -1,0 +1,1 @@
+/home/mori/.config/waybar/modules/runcat-text/main.py

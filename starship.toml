@@ -1,5 +1,5 @@
-scan_timeout = 1000  # ← AGREGÁ ARRIBA de format =
-command_timeout = 10000  # ← Subí de 5000 a 10000
+scan_timeout = 30
+command_timeout = 90
 
 format = """
 [](fg:#8A8A8A)\
@@ -47,16 +47,12 @@ truncation_symbol = "…/"
 "Downloads" = " "
 "Music" = " "
 "Pictures" = " "
-# Keep in mind that the order matters. For example:
-# "Important Documents" = "  "
-# will not be replaced, because "Documents" was already substituted before.
-# So either put "Important Documents" before "Documents" or use the substituted version:
-# "Important  " = "  "
 
 [c]
 symbol = " "
 style = "bg:#99EEDD"
 format = ' $symbol ($version) '
+disabled = true
 
 [docker_context]
 symbol = " "
@@ -67,14 +63,16 @@ format = ' $symbol $context $path'
 symbol = " "
 style = "bg:#99EEDD"
 format = ' $symbol ($version) '
+disabled = true
 
 [elm]
 symbol = " "
 style = "bg:#99EEDD"
 format = ' $symbol ($version) '
+disabled = true
 
 [git_branch]
-symbol = ""
+symbol = ""
 style = "bg:#5F5F5F"
 format = ' $symbol $branch '
 
@@ -86,21 +84,25 @@ format = '$all_status$ahead_behind '
 symbol = " "
 style = "bg:#99EEDD"
 format = ' $symbol ($version) '
+disabled = true
 
 [haskell]
 symbol = " "
 style = "bg:#99EEDD"
 format = ' $symbol ($version) '
+disabled = true
 
 [java]
 symbol = " "
 style = "bg:#99EEDD"
 format = ' $symbol ($version) '
+disabled = true
 
 [ocaml]
 symbol = ""
 style = "bg:#99EEDD"
 format = ' $symbol ($version) '
+disabled = true
 
 [nodejs]
 symbol = "󰎙"
@@ -111,6 +113,7 @@ format = ' $symbol ($version) '
 symbol = ""
 style = "bg:#99EEDD"
 format = ' $symbol ($version) '
+disabled = true
 
 [python]
 style = "bg:#8A8A8A"

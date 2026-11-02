@@ -1,0 +1,12 @@
+/home/mori/.config/amane/target/debug/deps/polycool-e05ad56903582c0e.d: /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/lib.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/cubic.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/poly.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/poly_dyn.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/quadratic.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/yuksel.rs
+
+/home/mori/.config/amane/target/debug/deps/libpolycool-e05ad56903582c0e.rlib: /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/lib.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/cubic.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/poly.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/poly_dyn.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/quadratic.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/yuksel.rs
+
+/home/mori/.config/amane/target/debug/deps/libpolycool-e05ad56903582c0e.rmeta: /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/lib.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/cubic.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/poly.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/poly_dyn.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/quadratic.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/yuksel.rs
+
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/lib.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/cubic.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/poly.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/poly_dyn.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/quadratic.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/polycool-0.4.0/src/yuksel.rs:

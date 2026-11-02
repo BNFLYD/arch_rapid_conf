@@ -1,0 +1,12 @@
+/home/mori/.config/amane/target/debug/deps/async_lock-cb143baa10e0522b.d: /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/lib.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/barrier.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/mutex.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/once_cell.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/rwlock.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/rwlock/futures.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/rwlock/raw.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/semaphore.rs
+
+/home/mori/.config/amane/target/debug/deps/libasync_lock-cb143baa10e0522b.rmeta: /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/lib.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/barrier.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/mutex.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/once_cell.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/rwlock.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/rwlock/futures.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/rwlock/raw.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/semaphore.rs
+
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/lib.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/barrier.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/mutex.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/once_cell.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/rwlock.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/rwlock/futures.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/rwlock/raw.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.5.0/src/semaphore.rs:

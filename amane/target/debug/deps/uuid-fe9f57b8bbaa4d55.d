@@ -1,0 +1,14 @@
+/home/mori/.config/amane/target/debug/deps/uuid-fe9f57b8bbaa4d55.d: /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/lib.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/macros.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/builder.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/error.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/non_nil.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/parser.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/fmt.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/timestamp.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/external.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/external/serde_support.rs
+
+/home/mori/.config/amane/target/debug/deps/libuuid-fe9f57b8bbaa4d55.rmeta: /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/lib.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/macros.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/builder.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/error.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/non_nil.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/parser.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/fmt.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/timestamp.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/external.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/external/serde_support.rs
+
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/lib.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/macros.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/builder.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/error.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/non_nil.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/parser.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/fmt.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/timestamp.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/external.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/uuid-1.29.0/src/external/serde_support.rs:

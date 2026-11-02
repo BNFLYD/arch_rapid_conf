@@ -1,0 +1,38 @@
+# Márgenes: equivalente a window_padding de WezTerm
+window-padding-x = 12
+window-padding-y = 8
+
+# Transparencia: mismo 37 % de opacidad que WezTerm
+background-opacity = 0.37
+
+# Esquema de colores sekaide
+background = #000000
+foreground = #dad4c3
+cursor-color = #47c8c0
+cursor-text = #000000
+selection-foreground = #99eedd
+selection-background = #bec8d1
+
+# Colores ANSI normales
+palette = 0=#000000
+palette = 1=#fc3e57
+palette = 2=#df4d96
+palette = 3=#7777ff
+palette = 4=#ac57ff
+palette = 5=#df4d96
+palette = 6=#99eedd
+palette = 7=#c5bfae
+
+# Colores ANSI brillantes
+palette = 8=#999999
+palette = 9=#fc3e57
+palette = 10=#99eedd
+palette = 11=#99eedd
+palette = 12=#99eedd
+palette = 13=#df4d96
+palette = 14=#99eedd
+palette = 15=#c5bfae
+
+# Cursor equivalente al de WezTerm
+cursor-style = bar
+cursor-style-blink = true

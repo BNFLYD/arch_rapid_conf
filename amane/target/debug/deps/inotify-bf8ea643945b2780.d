@@ -1,0 +1,12 @@
+/home/mori/.config/amane/target/debug/deps/inotify-bf8ea643945b2780.d: /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/lib.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/events.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/fd_guard.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/inotify.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/util.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/watches.rs
+
+/home/mori/.config/amane/target/debug/deps/libinotify-bf8ea643945b2780.rlib: /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/lib.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/events.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/fd_guard.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/inotify.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/util.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/watches.rs
+
+/home/mori/.config/amane/target/debug/deps/libinotify-bf8ea643945b2780.rmeta: /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/lib.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/events.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/fd_guard.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/inotify.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/util.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/watches.rs
+
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/lib.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/events.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/fd_guard.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/inotify.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/util.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/inotify-0.11.5/src/watches.rs:

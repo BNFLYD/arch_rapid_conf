@@ -1,0 +1,17 @@
+/home/mori/.config/amane/target/debug/deps/thiserror_impl-2c947ef642ea511d.d: /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/lib.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/ast.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/attr.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/expand.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/fallback.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/fmt.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/generics.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/prop.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/scan_expr.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/unraw.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/valid.rs
+
+/home/mori/.config/amane/target/debug/deps/libthiserror_impl-2c947ef642ea511d.so: /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/lib.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/ast.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/attr.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/expand.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/fallback.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/fmt.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/generics.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/prop.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/scan_expr.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/unraw.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/valid.rs
+
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/lib.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/ast.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/attr.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/expand.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/fallback.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/fmt.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/generics.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/prop.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/scan_expr.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/unraw.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/thiserror-impl-2.0.21/src/valid.rs:
+
+# env-dep:CARGO_PKG_VERSION_PATCH=21

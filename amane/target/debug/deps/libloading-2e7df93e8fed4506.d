@@ -1,0 +1,12 @@
+/home/mori/.config/amane/target/debug/deps/libloading-2e7df93e8fed4506.d: /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/lib.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/changelog.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/error.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/os/mod.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/os/unix/mod.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/os/unix/consts.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/safe.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/util.rs
+
+/home/mori/.config/amane/target/debug/deps/liblibloading-2e7df93e8fed4506.rmeta: /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/lib.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/changelog.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/error.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/os/mod.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/os/unix/mod.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/os/unix/consts.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/safe.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/util.rs
+
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/lib.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/changelog.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/error.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/os/mod.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/os/unix/mod.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/os/unix/consts.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/safe.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/libloading-0.8.9/src/util.rs:

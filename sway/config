@@ -215,9 +215,9 @@ client.focused_inactive #00000020   #1e1e1e   #888888
 # No enfocada: casi invisible
 client.unfocused        #00000020   #1e1e1e   #555555
 
-# Iniciar wayle (barra, notificaciones, OSD) — reemplaza a waybar
-# Plan: bitacora/planes/reparar-barra-wayle.md
-exec --no-startup-id wayle shell
+# Iniciar Amane Shell (taskbar minimalista escrita en Rust)
+# Reemplaza a Wayle y usa el backend nativo de Sway para los workspaces.
+exec --no-startup-id /home/mori/.cargo/bin/amane run
 
 # Iniciar swaync
 exec swaync

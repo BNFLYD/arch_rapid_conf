@@ -1,0 +1,12 @@
+/home/mori/.config/amane/target/debug/deps/async_trait-417cd543abd4f6e6.d: /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/lib.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/args.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/bound.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/expand.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/lifetime.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/parse.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/receiver.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/verbatim.rs
+
+/home/mori/.config/amane/target/debug/deps/libasync_trait-417cd543abd4f6e6.so: /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/lib.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/args.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/bound.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/expand.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/lifetime.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/parse.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/receiver.rs /home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/verbatim.rs
+
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/lib.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/args.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/bound.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/expand.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/lifetime.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/parse.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/receiver.rs:
+/home/mori/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-trait-0.1.92/src/verbatim.rs:
