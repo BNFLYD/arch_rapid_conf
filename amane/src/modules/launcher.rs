@@ -1,6 +1,6 @@
-use amane::{Color, Pointer, Rectangle, Text, Weight};
+use amane::{Button, Color, Pointer, Rectangle, Text, Weight};
 
-use crate::theme;
+use crate::{system_panel, theme};
 
 pub fn view() -> Rectangle {
     Rectangle::new()
@@ -10,7 +10,14 @@ pub fn view() -> Rectangle {
         .radius(7.0)
         .align_child(amane::Center, amane::Center)
         .cursor(Pointer)
-        .on_click(|_| amane::spawn("wofi --show drun"))
+        .on_click(|button| match button {
+            Button::Left => {
+                system_panel::close();
+                amane::spawn("wofi --show drun");
+            }
+            Button::Right => system_panel::toggle(),
+            Button::Middle => {}
+        })
         .child(
             Text::new("〇")
                 .size(18.0)
