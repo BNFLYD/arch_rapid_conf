@@ -1,14 +1,21 @@
-use amane::{Button, Image, Parent, Pointer, Rectangle};
+use amane::{Button, Image, Padding, Parent, Pointer, Rectangle};
 
+use super::PADDING;
 use crate::system_panel;
 
 const LOGO: &str = "/home/mori/Documents/assets/ui/logo.svg";
+const LOGO_WIDTH: f32 = 33.0;
 
 pub fn view() -> Rectangle {
     Rectangle::new()
-        .width(33.0)
+        .width(LOGO_WIDTH + PADDING * 2.0)
         .height(Parent)
-        .fill(Image::contain(LOGO))
+        .padding(Padding {
+            top: 0.0,
+            right: PADDING,
+            bottom: 0.0,
+            left: PADDING,
+        })
         .cursor(Pointer)
         .on_click(|button| match button {
             Button::Left => {
@@ -18,4 +25,10 @@ pub fn view() -> Rectangle {
             Button::Right => system_panel::toggle(),
             Button::Middle => {}
         })
+        .child(
+            Rectangle::new()
+                .width(Parent)
+                .height(Parent)
+                .fill(Image::contain(LOGO)),
+        )
 }
