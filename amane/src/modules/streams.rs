@@ -105,7 +105,7 @@ fn cava_view(text: &str) -> Rectangle {
         .width(216.0)
         .height(Parent)
         .align_child(amane::Center, amane::Center)
-        .child(Text::new(text).size(12.0).color(Color::from("#c5bfae")))
+        .child(Text::new(text).size(12.0).color(Color::from("#dad4c3")))
 }
 
 pub fn runcat() -> Rectangle {
@@ -119,7 +119,7 @@ pub fn runcat() -> Rectangle {
             Text::new(&runcat.text)
                 .size(37.0)
                 .font(theme::RUNCAT_FONT)
-                .color(Color::from("#dad463")),
+                .color(Color::from("#dad4c3")),
         )
 }
 

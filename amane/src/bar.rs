@@ -51,7 +51,6 @@ fn left_section() -> Rectangle {
         Start,
         Row::new(children![
             modules::launcher::view(),
-            modules::streams::runcat(),
         ])
         .gap(7.0)
         .height(Parent)
