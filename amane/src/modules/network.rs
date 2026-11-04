@@ -2,9 +2,9 @@ use std::fs;
 use std::path::Path;
 use std::time::{Duration, Instant};
 
-use amane::{Color, Rectangle, Service, Text};
+use amane::{Center, Color, Padding, Rectangle, Row, Service, Text, children};
 
-use crate::theme;
+use crate::{modules, theme};
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 struct Sample {
@@ -85,29 +85,57 @@ impl NetworkStatus {
 pub fn view() -> Rectangle {
     let network = NetworkStatus::read();
 
-    let label = if network.sample.connected {
+    let (icon, label) = if network.sample.connected {
         let icon = if network.sample.wireless {
             ""
         } else {
             ""
         };
 
-        format!("{icon}  {}", format_rate(network.sample.bytes_per_second))
+        (icon, format_rate(network.sample.bytes_per_second))
     } else {
-        String::from("󰖟 N/A")
+        ("󰖟", String::from("N/A"))
     };
 
+    let icon_text = Text::new(icon)
+        .size(14.0)
+        .color(Color::from(theme::MODULE_FOREGROUND));
+    let icon_width = modules::measured_width(&icon_text) + modules::PADDING;
+
+    let content = Row::new(children![
+        Rectangle::new()
+            .width(icon_width)
+            .height(24.0)
+            .padding(Padding {
+                top: 0.0,
+                right: modules::PADDING,
+                bottom: 0.0,
+                left: 0.0,
+            })
+            .align_child(Center, Center)
+            .child(icon_text),
+        Text::new(label)
+            .size(14.0)
+            .color(Color::from(theme::MODULE_FOREGROUND)),
+    ])
+    .gap(modules::GAP)
+    .align(Center);
+
+    let width = modules::measured_width(&content) + modules::PADDING * 2.0;
+
     Rectangle::new()
-        .width(118.0)
+        .width(width)
         .height(24.0)
         .fill(theme::MODULE_BACKGROUND)
         .radius(7.0)
-        .align_child(amane::Center, amane::Center)
-        .child(
-            Text::new(label)
-                .size(14.0)
-                .color(Color::from(theme::MODULE_FOREGROUND)),
-        )
+        .padding(Padding {
+            top: 0.0,
+            right: modules::PADDING,
+            bottom: 0.0,
+            left: modules::PADDING,
+        })
+        .align_child(Center, Center)
+        .child(content)
 }
 
 fn default_interface() -> Option<String> {

@@ -1,4 +1,7 @@
-use amane::{Color, Parent, Rectangle, Service, Text};
+use std::thread;
+use std::time::Duration;
+
+use amane::{Color, Cpu, Parent, Rectangle, Service, Text};
 
 use crate::theme;
 
@@ -42,19 +45,46 @@ pub struct Runcat {
     text: String,
 }
 
+const ICONS: [char; 5] = ['\u{E900}', '\u{E901}', '\u{E902}', '\u{E903}', '\u{E904}'];
+const FPS_L: f32 = 7.0;
+const FPS_H: f32 = 90.0;
+
+// misma fórmula del script original: intervalo lineal en el uso de CPU
+fn interval(percent: u8) -> f32 {
+    let delta = (1.0 / FPS_L - 1.0 / FPS_H) / 100.0;
+
+    (1.0 / FPS_L - delta * percent as f32).max(1.0 / FPS_H)
+}
+
 impl Service for Runcat {
     fn new() -> Self {
         Self {
-            text: String::new(),
+            text: ICONS[0].to_string(),
         }
     }
 
     fn listen() {
-        for line in amane::lines(
-            "$HOME/.config/waybar/modules/runcat-text/.venv/bin/python $HOME/.config/amane/runcat/main.py",
-        ) {
-            Self::write().text = line;
+        let mut frame = 0usize;
+
+        loop {
+            let percent = Cpu::read().percent();
+
+            Self::write().text = ICONS[frame % ICONS.len()].to_string();
+            frame += 1;
+
+            thread::sleep(Duration::from_secs_f32(interval(percent)));
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn interval_goes_from_slow_to_fast() {
+        assert_eq!(interval(0), 1.0 / FPS_L);
+        assert_eq!(interval(100), 1.0 / FPS_H);
     }
 }
 
@@ -89,7 +119,7 @@ pub fn runcat() -> Rectangle {
             Text::new(&runcat.text)
                 .size(37.0)
                 .font(theme::RUNCAT_FONT)
-                .color(Color::from("#c5bfae")),
+                .color(Color::from("#dad463")),
         )
 }
 

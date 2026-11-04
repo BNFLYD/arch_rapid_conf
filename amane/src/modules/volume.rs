@@ -1,6 +1,8 @@
-use amane::{Audio, Button, Color, Rectangle, Scroll, Service, Text};
+use amane::{
+    Audio, Button, Center, Color, Padding, Rectangle, Row, Scroll, Service, Text, children,
+};
 
-use crate::theme;
+use crate::{modules, theme};
 
 pub fn view() -> Rectangle {
     let audio = Audio::read();
@@ -15,21 +17,49 @@ pub fn view() -> Rectangle {
         ""
     };
 
-    let label = format!("{icon} {}%", audio.volume());
+    let label = format!("{}%", audio.volume());
+
+    let icon_text = Text::new(icon)
+        .size(14.0)
+        .color(Color::from(theme::MODULE_FOREGROUND));
+    let icon_width = modules::measured_width(&icon_text) + modules::PADDING;
+
+    let content = Row::new(children![
+        Rectangle::new()
+            .width(icon_width)
+            .height(24.0)
+            .padding(Padding {
+                top: 0.0,
+                right: modules::PADDING,
+                bottom: 0.0,
+                left: 0.0,
+            })
+            .align_child(Center, Center)
+            .child(icon_text),
+        Text::new(label)
+            .size(14.0)
+            .color(Color::from(theme::MODULE_FOREGROUND)),
+    ])
+    .gap(modules::GAP)
+    .align(Center);
+
+    let width = modules::measured_width(&content) + modules::PADDING * 2.0;
 
     Rectangle::new()
-        .width(78.0)
+        .width(width)
         .height(24.0)
         .fill(theme::MODULE_BACKGROUND)
         .radius(7.0)
-        .align_child(amane::Center, amane::Center)
+        .padding(Padding {
+            top: 0.0,
+            right: modules::PADDING,
+            bottom: 0.0,
+            left: modules::PADDING,
+        })
         .on_click(open_volume_controls)
         .on_scroll(change_volume)
-        .child(
-            Text::new(label)
-                .size(14.0)
-                .color(Color::from(theme::MODULE_FOREGROUND)),
-        )
+        .align_child(Center, Center)
+        .child(content)
 }
 
 fn open_volume_controls(_: Button) {

@@ -36,8 +36,8 @@ pub fn view(monitor: &Monitor) -> LayerWindow {
                 .translate(0.0, 1.0)
                 .child(
                     Row::new(children![
-                        left_section(monitor),
-                        center_section(),
+                        left_section(),
+                        center_section(monitor),
                         right_section(),
                     ])
                     .height(Parent)
@@ -46,11 +46,11 @@ pub fn view(monitor: &Monitor) -> LayerWindow {
         )
 }
 
-fn left_section(monitor: &Monitor) -> Rectangle {
+fn left_section() -> Rectangle {
     section(
         Start,
         Row::new(children![
-            modules::workspaces::view(monitor),
+            modules::launcher::view(),
             modules::streams::runcat(),
         ])
         .gap(7.0)
@@ -59,12 +59,12 @@ fn left_section(monitor: &Monitor) -> Rectangle {
     )
 }
 
-fn center_section() -> Rectangle {
+fn center_section(monitor: &Monitor) -> Rectangle {
     section(
         Center,
         Row::new(children![
             modules::streams::cava_left(),
-            modules::launcher::view(),
+            modules::workspaces::view(monitor),
             modules::streams::cava_right(),
         ])
         .gap(7.0)
