@@ -13,5 +13,6 @@ fn main() {
         .window(system_panel::view)
         .window_per_monitor(app_launcher::view)
         .window_per_monitor(bar::view)
+        .ipc("launcher", app_launcher::ipc)
         .run();
 }

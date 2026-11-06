@@ -50,6 +50,7 @@ struct Entry {
     icon: Option<PathBuf>,
     exec: String,
     count: u32,
+    score: u32,
 }
 
 pub fn toggle() {
@@ -58,6 +59,10 @@ pub fn toggle() {
         return;
     }
 
+    open();
+}
+
+pub fn open() {
     {
         let mut state = LauncherState::write();
         state.open = true;
@@ -74,6 +79,24 @@ pub fn close() {
     state.open = false;
 }
 
+/// Lets a keybinding open the launcher: `amane ipc call launcher toggle`.
+pub fn ipc(args: &[String]) -> String {
+    match args.first().map(String::as_str) {
+        Some("open") => {
+            open();
+            "abierto".to_string()
+        }
+        Some("close") => {
+            close();
+            "cerrado".to_string()
+        }
+        _ => {
+            toggle();
+            "alternado".to_string()
+        }
+    }
+}
+
 pub fn view(monitor: &Monitor) -> LayerWindow {
     let (open, query, selected) = {
         let state = LauncherState::read();
@@ -84,23 +107,26 @@ pub fn view(monitor: &Monitor) -> LayerWindow {
     let selected = selected.min(entries.len().saturating_sub(1));
     let rows = visible_range(entries.len(), selected);
 
-    // the height is always the same, no matter how many apps match
+    // the box is always the same size, no matter how many apps match
+    let width = monitor.width as f32 * WIDTH_RATIO;
     let height = PADDING * 2.0 + SEARCH_HEIGHT + ROWS as f32 * (ROW_HEIGHT + GAP);
 
-    let child = if open {
-        content(&entries, &rows, selected)
-    } else {
-        Rectangle::new()
-            .width(Parent)
-            .height(Parent)
-            .fill(Color::TRANSPARENT)
-    };
+    let box_content = content(&entries, &rows, selected, width, height);
+
+    // the window covers the whole screen, so a click outside the box closes it
+    let child = Rectangle::new()
+        .width(Parent)
+        .height(Parent)
+        .fill(Color::TRANSPARENT)
+        .align_child(amane::Center, amane::Center)
+        .on_click(|_| close())
+        .child(box_content);
 
     LayerWindow::new()
-        .width(monitor.width as f32 * WIDTH_RATIO)
-        .height(height)
-        .anchor_vertical(Vertical::Middle)
-        .anchor_horizontal(Horizontal::Middle)
+        .width(monitor.width as f32)
+        .height(monitor.height as f32)
+        .anchor_vertical(Vertical::Top)
+        .anchor_horizontal(Horizontal::Left)
         .margin(Margin {
             top: 0,
             right: 0,
@@ -121,7 +147,13 @@ pub fn view(monitor: &Monitor) -> LayerWindow {
         .child(child)
 }
 
-fn content(entries: &[Entry], rows: &Range<usize>, selected: usize) -> Rectangle {
+fn content(
+    entries: &[Entry],
+    rows: &Range<usize>,
+    selected: usize,
+    width: f32,
+    height: f32,
+) -> Rectangle {
     let mut items: Vec<Box<dyn amane::Widget>> = vec![Box::new(search_box())];
 
     if entries.is_empty() {
@@ -133,17 +165,18 @@ fn content(entries: &[Entry], rows: &Range<usize>, selected: usize) -> Rectangle
     }
 
     Rectangle::new()
-        .width(Parent)
-        .height(Parent)
+        .width(width)
+        .height(height)
         .fill(theme::LAUNCHER_BACKGROUND)
         .radius(14.0)
-        .border(1.0, theme::PANEL_BORDER)
         .padding(Padding {
             top: PADDING,
             right: PADDING,
             bottom: PADDING,
             left: PADDING,
         })
+        // the clicks inside the box do not close it
+        .on_click(|_| {})
         .on_scroll(scroll_selection)
         .child(Column::new(items).gap(GAP))
 }
@@ -264,47 +297,101 @@ fn empty_message() -> Rectangle {
         )
 }
 
-/// The apps that match what was typed: the most used ones first, and the
-/// others in alphabetical order.
+/// The apps that match what was typed: the best match first, then the most used
+/// ones, and the others in alphabetical order.
 fn filtered(query: &str) -> Vec<Entry> {
     let query = query.trim().to_lowercase();
 
     let mut entries: Vec<Entry> = Apps::read()
         .list()
         .iter()
-        .filter(|app| matches(app, &query))
-        .map(entry)
+        .filter_map(|app| {
+            let score = score(app.name(), app.description(), &query)?;
+
+            Some(entry(app, score))
+        })
         .collect();
 
     entries.sort_by(|a, b| {
-        b.count
-            .cmp(&a.count)
+        b.score
+            .cmp(&a.score)
+            .then_with(|| b.count.cmp(&a.count))
             .then_with(|| a.name.to_lowercase().cmp(&b.name.to_lowercase()))
     });
 
     entries
 }
 
-fn matches(app: &DesktopApp, query: &str) -> bool {
-    matches_text(app.name(), app.description(), query)
-}
-
-fn matches_text(name: &str, description: Option<&str>, query: &str) -> bool {
+/// How well an app matches what was typed: the bigger the better, `None` when
+/// it does not match at all. The name counts more than the description, and a
+/// text that has all the letters in order counts even when they are apart.
+fn score(name: &str, description: Option<&str>, query: &str) -> Option<u32> {
     let query = query.trim().to_lowercase();
 
     if query.is_empty() {
-        return true;
+        return Some(0);
     }
 
-    name.to_lowercase().contains(&query)
-        || description.is_some_and(|text| text.to_lowercase().contains(&query))
+    let name = name.to_lowercase();
+
+    if name == query {
+        return Some(1000);
+    }
+
+    // the name starts with what was typed, the rest of it matters less
+    if let Some(position) = name.find(&query) {
+        let base: u32 = if position == 0 { 800 } else { 600 };
+
+        return Some(
+            base.saturating_sub(position as u32)
+                .saturating_sub(name.len() as u32 / 4),
+        );
+    }
+
+    if let Some(position) = description.and_then(|text| text.to_lowercase().find(&query)) {
+        return Some(400u32.saturating_sub(position as u32));
+    }
+
+    // the letters are all there, in order, but not together
+    if let Some(span) = fuzzy_span(&name, &query) {
+        return Some(200u32.saturating_sub(span as u32));
+    }
+
+    if let Some(span) = description.and_then(|text| fuzzy_span(&text.to_lowercase(), &query)) {
+        return Some(100u32.saturating_sub(span as u32));
+    }
+
+    None
 }
 
-fn entry(app: &DesktopApp) -> Entry {
+/// How far apart the letters of the query are inside the text, when all of them
+/// are there in order.
+fn fuzzy_span(text: &str, query: &str) -> Option<usize> {
+    let mut chars = text.chars().enumerate();
+    let mut first = None;
+    let mut last = 0;
+
+    for wanted in query.chars() {
+        loop {
+            let (index, current) = chars.next()?;
+
+            if current == wanted {
+                first.get_or_insert(index);
+                last = index;
+                break;
+            }
+        }
+    }
+
+    Some(last - first.unwrap_or(0))
+}
+
+fn entry(app: &DesktopApp, score: u32) -> Entry {
     let name = app.name().to_string();
 
     Entry {
         count: Usage::read().count(&name),
+        score,
         name,
         description: app.description().map(str::to_string),
         icon: app.icon_path().map(PathBuf::from),
@@ -379,14 +466,34 @@ fn launch_selected() {
 
 #[cfg(test)]
 mod tests {
-    use super::{ROWS, matches_text, visible_range};
+    use super::{ROWS, score, visible_range};
 
     #[test]
     fn filters_by_name_and_description() {
-        assert!(matches_text("Firefox", Some("Web Browser"), "fire"));
-        assert!(matches_text("Firefox", Some("Web Browser"), "BROWS"));
-        assert!(!matches_text("Firefox", Some("Web Browser"), "krit"));
-        assert!(matches_text("Firefox", None, "  "));
+        assert!(score("Firefox", Some("Web Browser"), "fire").is_some());
+        assert!(score("Firefox", Some("Web Browser"), "BROWS").is_some());
+        assert!(score("Firefox", Some("Web Browser"), "krit").is_none());
+        assert!(score("Firefox", None, "  ").is_some());
+    }
+
+    #[test]
+    fn finds_apps_with_the_letters_in_order() {
+        assert!(score("Firefox", None, "ffx").is_some());
+        assert!(score("Zen Browser", None, "zbr").is_some());
+        assert!(score("Ghostty", None, "ght").is_some());
+        assert!(score("Firefox", None, "xr").is_none());
+    }
+
+    #[test]
+    fn the_better_match_wins() {
+        let exact = score("Firefox", None, "fire").unwrap();
+        let longer = score("Firefox Nightly", None, "fire").unwrap();
+        let in_description = score("Thunderbird", Some("Firefox based"), "fire").unwrap();
+        let apart = score("Firefox", None, "ffx").unwrap();
+
+        assert!(exact > longer);
+        assert!(longer > in_description);
+        assert!(in_description > apart);
     }
 
     #[test]
