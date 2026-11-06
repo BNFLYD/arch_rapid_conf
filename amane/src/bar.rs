@@ -49,12 +49,10 @@ pub fn view(monitor: &Monitor) -> LayerWindow {
 fn left_section() -> Rectangle {
     section(
         Start,
-        Row::new(children![
-            modules::launcher::view(),
-        ])
-        .gap(7.0)
-        .height(Parent)
-        .align(Center),
+        Row::new(children![modules::launcher::view(),])
+            .gap(7.0)
+            .height(Parent)
+            .align(Center),
     )
 }
 

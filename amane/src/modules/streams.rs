@@ -41,6 +41,7 @@ impl Service for CavaRight {
     }
 }
 
+// runcat queda a la espera de integrarse en la barra, no borrar
 pub struct Runcat {
     text: String,
 }

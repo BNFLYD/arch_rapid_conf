@@ -1,6 +1,7 @@
 use amane::{Button, Image, Padding, Parent, Pointer, Rectangle};
 
 use super::PADDING;
+use crate::app_launcher;
 use crate::system_panel;
 
 const LOGO: &str = "/home/mori/Documents/assets/ui/logo.svg";
@@ -20,7 +21,7 @@ pub fn view() -> Rectangle {
         .on_click(|button| match button {
             Button::Left => {
                 system_panel::close();
-                amane::spawn("wofi --show drun");
+                app_launcher::toggle();
             }
             Button::Right => system_panel::toggle(),
             Button::Middle => {}
