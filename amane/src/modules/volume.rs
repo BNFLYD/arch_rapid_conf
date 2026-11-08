@@ -56,14 +56,14 @@ pub fn view() -> Rectangle {
             bottom: 0.0,
             left: modules::PADDING,
         })
-        .on_click(open_volume_controls)
+        .on_click(open_volume_panel)
         .on_scroll(change_volume)
         .align_child(Center, Center)
         .child(content)
 }
 
-fn open_volume_controls(_: Button) {
-    amane::spawn("pavucontrol");
+fn open_volume_panel(_: Button) {
+    crate::volume_panel::toggle();
 }
 
 fn change_volume(scroll: Scroll) {

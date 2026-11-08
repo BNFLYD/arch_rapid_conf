@@ -41,14 +41,16 @@ impl Service for CavaRight {
     }
 }
 
-// runcat queda a la espera de integrarse en la barra, no borrar
+// runcat: se mueve más rápido cuanto más carga de CPU hay
 pub struct Runcat {
     text: String,
 }
 
 const ICONS: [char; 5] = ['\u{E900}', '\u{E901}', '\u{E902}', '\u{E903}', '\u{E904}'];
-const FPS_L: f32 = 7.0;
-const FPS_H: f32 = 90.0;
+// the cat is in the system panel, and that panel is a fullscreen window: every
+// frame of the cat redraws all of it, so it cannot go too fast
+const FPS_L: f32 = 3.0;
+const FPS_H: f32 = 10.0;
 
 // misma fórmula del script original: intervalo lineal en el uso de CPU
 fn interval(percent: u8) -> f32 {
@@ -68,6 +70,13 @@ impl Service for Runcat {
         let mut frame = 0usize;
 
         loop {
+            // the cat only moves while the panel that shows it is open: a
+            // hidden panel still gets redrawn, and that one covers the screen
+            if !crate::system_panel::is_open() {
+                thread::sleep(Duration::from_millis(250));
+                continue;
+            }
+
             let percent = Cpu::read().percent();
 
             Self::write().text = ICONS[frame % ICONS.len()].to_string();
@@ -109,16 +118,16 @@ fn cava_view(text: &str) -> Rectangle {
         .child(Text::new(text).size(12.0).color(Color::from("#dad4c3")))
 }
 
-pub fn runcat() -> Rectangle {
+pub fn runcat_view(width: f32, size: f32) -> Rectangle {
     let runcat = Runcat::read();
 
     Rectangle::new()
-        .width(42.0)
+        .width(width)
         .height(Parent)
         .align_child(amane::Center, amane::Center)
         .child(
             Text::new(&runcat.text)
-                .size(37.0)
+                .size(size)
                 .font(theme::RUNCAT_FONT)
                 .color(Color::from("#dad4c3")),
         )

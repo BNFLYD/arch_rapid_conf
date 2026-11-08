@@ -54,12 +54,15 @@ struct Entry {
 }
 
 pub fn toggle() {
-    if LauncherState::read().open {
-        close();
-        return;
-    }
+    // the read ends before the write: both on the same service would wait
+    // for each other
+    let is_open = LauncherState::read().open;
 
-    open();
+    if is_open {
+        close();
+    } else {
+        open();
+    }
 }
 
 pub fn open() {

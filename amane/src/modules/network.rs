@@ -82,6 +82,24 @@ impl NetworkStatus {
     }
 }
 
+impl NetworkStatus {
+    pub fn connected(&self) -> bool {
+        self.sample.connected
+    }
+
+    pub fn wireless(&self) -> bool {
+        self.sample.wireless
+    }
+
+    pub fn interface(&self) -> Option<&str> {
+        self.interface.as_deref()
+    }
+
+    pub fn download_rate(&self) -> String {
+        format_rate(self.sample.bytes_per_second)
+    }
+}
+
 pub fn view() -> Rectangle {
     let network = NetworkStatus::read();
 
@@ -135,6 +153,8 @@ pub fn view() -> Rectangle {
             left: modules::PADDING,
         })
         .align_child(Center, Center)
+        .cursor(amane::Pointer)
+        .on_click(|_| crate::network_panel::toggle())
         .child(content)
 }
 

@@ -6,16 +6,21 @@ use std::thread;
 use std::time::Duration;
 
 use amane::{
-    Battery, Color, Column, Cpu, Full, Horizontal, Image, Key, Keyboard, Layer, LayerWindow,
-    Margin, Memory, Padding, Parent, Rectangle, Row, Service, SpaceBetween, Start, Text, Vertical,
-    Weight, Zone, children,
+    Arc, Battery, Canvas, Cap, Color, Column, Cpu, Full, Horizontal, Image, Key, Keyboard, Layer,
+    LayerWindow, Margin, Memory, Monitor, Padding, Parent, Rectangle, Row, Service, Shape, Size,
+    SpaceBetween, Stack, Start, Text, Vertical, Weight, Widget, Zone, children, shapes,
 };
 
+use crate::modules::network::NetworkStatus;
+use crate::modules::streams;
 use crate::theme;
 
-const WIDTH: f32 = 390.0;
-const BASE_HEIGHT: f32 = 380.0;
-const CONTENT_WIDTH: f32 = WIDTH - 36.0;
+// the same width as the app launcher, so both overlays feel the same
+const WIDTH_RATIO: f32 = 0.52;
+const PADDING: f32 = 16.0;
+const GAP: f32 = 8.0;
+const RING_SIZE: f32 = 96.0;
+const RING_STROKE: f32 = 7.0;
 
 struct PanelState {
     open: bool,
@@ -30,13 +35,45 @@ impl Service for PanelState {
 }
 
 pub fn toggle() {
+    let open = PanelState::read().open;
     let mut state = PanelState::write();
-    state.open = !state.open;
+    state.open = !open;
+}
+
+/// Whether the panel is open, for the modules that only move while it shows.
+pub fn is_open() -> bool {
+    PanelState::read().open
 }
 
 pub fn close() {
     let mut state = PanelState::write();
     state.open = false;
+}
+
+/// Lets a keybinding open the panel: `amane ipc call panel toggle`.
+pub fn ipc(args: &[String]) -> String {
+    match args.first().map(String::as_str) {
+        Some("open") => {
+            let mut state = PanelState::write();
+            state.open = true;
+            "abierto".to_string()
+        }
+        Some("close") => {
+            close();
+            "cerrado".to_string()
+        }
+        Some("state") => {
+            if PanelState::read().open {
+                "abierto".to_string()
+            } else {
+                "cerrado".to_string()
+            }
+        }
+        _ => {
+            toggle();
+            "alternado".to_string()
+        }
+    }
 }
 
 #[derive(Debug, PartialEq)]
@@ -90,27 +127,23 @@ impl Service for SystemInfo {
     }
 }
 
-pub fn view() -> LayerWindow {
+pub fn view(monitor: &Monitor) -> LayerWindow {
     let open = PanelState::read().open;
-    let info = SystemInfo::read();
-    let battery = Battery::read();
-    let extra_rows = u8::from(info.temperature.is_some()) + u8::from(battery.present());
-    let height = BASE_HEIGHT + f32::from(extra_rows) * 28.0;
 
-    let child = if open {
-        content()
-    } else {
-        Rectangle::new()
-            .width(Parent)
-            .height(Parent)
-            .fill(Color::TRANSPARENT)
-    };
+    // the window covers the whole screen, so a click outside the box closes it
+    let child = Rectangle::new()
+        .width(Parent)
+        .height(Parent)
+        .fill(Color::TRANSPARENT)
+        .align_child(amane::Center, amane::Center)
+        .on_click(|_| close())
+        .child(content(monitor.width as f32 * WIDTH_RATIO));
 
     LayerWindow::new()
-        .width(WIDTH)
-        .height(height)
-        .anchor_vertical(Vertical::Middle)
-        .anchor_horizontal(Horizontal::Middle)
+        .width(monitor.width as f32)
+        .height(monitor.height as f32)
+        .anchor_vertical(Vertical::Top)
+        .anchor_horizontal(Horizontal::Left)
         .margin(Margin {
             top: 0,
             right: 0,
@@ -118,7 +151,7 @@ pub fn view() -> LayerWindow {
             left: 0,
         })
         .layer(Layer::Overlay)
-        .keyboard(Keyboard::OnDemand)
+        .keyboard(Keyboard::Exclusive)
         .space(Zone::Ignore)
         .namespace("amane-system-panel")
         .visible(open)
@@ -130,77 +163,78 @@ pub fn view() -> LayerWindow {
         .child(child)
 }
 
-fn content() -> Rectangle {
+fn content(width: f32) -> Rectangle {
+    let column = column();
+
+    Rectangle::new()
+        .width(width)
+        .height(box_height(&column))
+        .fill(theme::LAUNCHER_BACKGROUND)
+        .radius(14.0)
+        .padding(Padding {
+            top: PADDING,
+            right: 18.0,
+            bottom: PADDING,
+            left: 18.0,
+        })
+        // the clicks inside the box do not close it
+        .on_click(|_| {})
+        .child(column)
+}
+
+/// The height of the system panel, so the other panels can have the same size.
+pub fn height() -> f32 {
+    box_height(&column())
+}
+
+fn box_height(column: &Column) -> f32 {
+    // the column knows how tall it is, so the box never has to guess
+    match Widget::height(column) {
+        Size::Fixed(height) => height + PADDING * 2.0,
+        _ => 0.0,
+    }
+}
+
+fn column() -> Column {
     let cpu = Cpu::read().percent();
     let memory = Memory::read();
     let battery = Battery::read();
     let info = SystemInfo::read();
+    let network = NetworkStatus::read();
 
-    let memory_used = memory.used_kib().saturating_mul(1024);
-    let memory_total = memory.total_kib().saturating_mul(1024);
     let disk_total = info.disk_used.saturating_add(info.disk_available);
     let disk_percent = percent(info.disk_used, disk_total);
-    let mut children: Vec<Box<dyn amane::Widget>> = vec![
+
+    let mut items: Vec<Box<dyn Widget>> = vec![
         Box::new(header(&info.hostname)),
         Box::new(divider()),
-        Box::new(section("RENDIMIENTO")),
-        Box::new(stat_row("CPU", format!("{cpu}%"))),
-        Box::new(progress_bar(cpu)),
-        Box::new(stat_row(
-            "Memoria",
-            format!("{} / {}", gibibytes(memory_used), gibibytes(memory_total)),
-        )),
-        Box::new(progress_bar(memory.percent())),
-        Box::new(stat_row(
-            "Disco",
-            format!("{} / {}", gibibytes(info.disk_used), gibibytes(disk_total)),
-        )),
-        Box::new(progress_bar(disk_percent)),
+        Box::new(rings(cpu, memory.percent(), disk_percent)),
     ];
 
-    if let Some(temperature) = info.temperature {
-        children.push(Box::new(stat_row(
-            "Temperatura",
-            format!("{temperature} °C"),
-        )));
-    }
+    items.push(Box::new(section("RED")));
+    items.push(Box::new(stat_row("Conexión", connection(&network))));
+    items.push(Box::new(stat_row("Descarga", network.download_rate())));
 
     if battery.present() {
-        let state = if battery.charging() {
-            "cargando"
-        } else if battery.full() {
-            "carga completa"
-        } else {
-            "por cable"
-        };
-        children.push(Box::new(stat_row(
-            "Batería",
-            format!("{}% · {state}", battery.percent()),
-        )));
+        items.push(Box::new(section("BATERÍA")));
+        items.push(Box::new(stat_row("Carga", battery_label(&battery))));
     }
 
-    children.push(Box::new(section("EQUIPO")));
-    children.push(Box::new(stat_row("Sistema", info.os.clone())));
-    children.push(Box::new(stat_row("Kernel", info.kernel.clone())));
-    children.push(Box::new(stat_row(
+    if let Some(temperature) = info.temperature {
+        items.push(Box::new(section("TEMPERATURA")));
+        items.push(Box::new(stat_row("Sensor", format!("{temperature} °C"))));
+    }
+
+    items.push(Box::new(section("EQUIPO")));
+    items.push(Box::new(stat_row("Sistema", info.os.clone())));
+    items.push(Box::new(stat_row("Kernel", info.kernel.clone())));
+    items.push(Box::new(stat_row(
         "Uptime",
         format_uptime(info.uptime_seconds),
     )));
-    children.push(Box::new(actions()));
+    items.push(Box::new(actions()));
 
-    Rectangle::new()
-        .width(Parent)
-        .height(Parent)
-        .fill(theme::PANEL_BACKGROUND)
-        .radius(14.0)
-        .border(1.0, theme::PANEL_BORDER)
-        .padding(Padding {
-            top: 16.0,
-            right: 18.0,
-            bottom: 16.0,
-            left: 18.0,
-        })
-        .child(Column::new(children).gap(8.0))
+    Column::new(items).gap(GAP)
 }
 
 fn header(hostname: &str) -> Rectangle {
@@ -251,7 +285,7 @@ fn avatar() -> Rectangle {
         .radius(Full)
         .align_child(amane::Center, amane::Center)
         .child(
-            Text::new("")
+            Text::new("")
                 .size(23.0)
                 .weight(Weight::Bold)
                 .color(Color::from(theme::MODULE_FOREGROUND)),
@@ -287,6 +321,7 @@ fn divider() -> Rectangle {
         .width(Parent)
         .height(1.0)
         .fill(theme::PANEL_BORDER)
+        .opacity(0.5)
 }
 
 fn stat_row(label: &str, value: String) -> Row {
@@ -305,20 +340,95 @@ fn stat_row(label: &str, value: String) -> Row {
     .align(amane::Center)
 }
 
-fn progress_bar(percent: u8) -> Rectangle {
-    Rectangle::new()
-        .width(Parent)
-        .height(6.0)
-        .fill(theme::PANEL_BORDER)
-        .radius(3.0)
-        .align_child(Start, amane::Center)
-        .child(
-            Rectangle::new()
-                .width(CONTENT_WIDTH * f32::from(percent) / 100.0)
-                .height(6.0)
-                .fill(theme::MODULE_BACKGROUND)
-                .radius(3.0),
-        )
+// the rings of the dashboard: a circle with the value in the middle
+fn rings(cpu: u8, memory: u8, disk: u8) -> Row {
+    Row::new(children![
+        streams::runcat_view(64.0, 56.0),
+        ring(cpu, "CPU"),
+        ring(memory, "RAM"),
+        ring(disk, "Disco"),
+    ])
+    .width(Parent)
+    .height(RING_SIZE + 22.0)
+    .gap(28.0)
+    .justify(amane::SpaceEvenly)
+    .align(amane::Center)
+}
+
+fn ring(percent: u8, label: &str) -> Column {
+    let circle = Stack::new(children![
+        Canvas::new()
+            .width(RING_SIZE)
+            .height(RING_SIZE)
+            .shapes(shapes![
+                Arc::new()
+                    .stroke(RING_STROKE, theme::PANEL_BORDER)
+                    .opacity(0.4),
+                Arc::new()
+                    .sweep(360.0 * f32::from(percent) / 100.0)
+                    .stroke(RING_STROKE, ring_color(percent))
+                    .cap(Cap::Round),
+            ]),
+        Rectangle::new()
+            .width(Parent)
+            .height(Parent)
+            .align_child(amane::Center, amane::Center)
+            .child(
+                Text::new(format!("{percent}%"))
+                    .size(15.0)
+                    .weight(Weight::Bold)
+                    .color(Color::from(theme::PANEL_FOREGROUND)),
+            ),
+    ])
+    .width(RING_SIZE)
+    .height(RING_SIZE);
+
+    Column::new(children![
+        circle,
+        Text::new(label)
+            .size(11.0)
+            .color(Color::from(theme::PANEL_MUTED)),
+    ])
+    .gap(4.0)
+    .align(amane::Center)
+}
+
+// the same thresholds wayle uses for its rings
+fn ring_color(percent: u8) -> &'static str {
+    match percent {
+        85.. => theme::PANEL_DANGER,
+        60..=84 => theme::PANEL_WARNING,
+        _ => theme::PANEL_SUCCESS,
+    }
+}
+
+fn connection(network: &NetworkStatus) -> String {
+    if !network.connected() {
+        return String::from("Sin conexión");
+    }
+
+    let kind = if network.wireless() {
+        "Wi-Fi"
+    } else {
+        "Ethernet"
+    };
+
+    match network.interface() {
+        Some(interface) => format!("{kind} · {interface}"),
+        None => kind.to_string(),
+    }
+}
+
+fn battery_label(battery: &Battery) -> String {
+    let state = if battery.charging() {
+        "cargando"
+    } else if battery.full() {
+        "carga completa"
+    } else {
+        "por cable"
+    };
+
+    format!("{}% · {state}", battery.percent())
 }
 
 fn actions() -> Row {
@@ -331,6 +441,7 @@ fn actions() -> Row {
     .width(Parent)
     .height(34.0)
     .gap(6.0)
+    .justify(amane::SpaceEvenly)
     .align(amane::Center)
 }
 
@@ -442,10 +553,6 @@ fn percent(used: u64, total: u64) -> u8 {
     ((used as f64 * 100.0 / total as f64) as u8).min(100)
 }
 
-fn gibibytes(bytes: u64) -> String {
-    format!("{:.1} GiB", bytes as f64 / 1024.0_f64.powi(3))
-}
-
 fn format_uptime(seconds: u64) -> String {
     let days = seconds / 86_400;
     let hours = (seconds % 86_400) / 3_600;
@@ -462,7 +569,8 @@ fn format_uptime(seconds: u64) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::{format_uptime, percent};
+    use super::{format_uptime, percent, ring_color};
+    use crate::theme;
 
     #[test]
     fn formats_uptime_and_percentages() {
@@ -472,5 +580,12 @@ mod tests {
         assert_eq!(percent(1, 3), 33);
         assert_eq!(percent(1, 0), 0);
         assert_eq!(percent(3, 2), 100);
+    }
+
+    #[test]
+    fn the_ring_color_follows_the_wayle_thresholds() {
+        assert_eq!(ring_color(10), theme::PANEL_SUCCESS);
+        assert_eq!(ring_color(60), theme::PANEL_WARNING);
+        assert_eq!(ring_color(85), theme::PANEL_DANGER);
     }
 }
