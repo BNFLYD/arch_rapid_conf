@@ -16,4 +16,6 @@ pub const PANEL_WARNING: &str = "#d9a441";
 // los colores del launcher, taken del estilo de wofi
 pub const LAUNCHER_BACKGROUND: &str = "#0c0c0cb3";
 pub const LAUNCHER_SEARCH: &str = "#0c0c0c80";
+// the start menu covers the whole screen, so it has to hide the windows behind it
+pub const START_MENU_BACKGROUND: &str = "#0c0c0cf5";
 pub const LAUNCHER_SELECTED: &str = "#2b2b2bb3";

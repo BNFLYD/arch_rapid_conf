@@ -2,6 +2,7 @@ mod app_launcher;
 mod bar;
 mod modules;
 mod network_panel;
+mod start_menu;
 mod system_panel;
 mod theme;
 mod usage;
@@ -17,10 +18,12 @@ fn main() {
         // after the launcher, so the password field takes the keyboard focus
         .window_per_monitor(network_panel::view)
         .window_per_monitor(volume_panel::view)
+        .window_per_monitor(start_menu::view)
         .window_per_monitor(bar::view)
         .ipc("launcher", app_launcher::ipc)
         .ipc("panel", system_panel::ipc)
         .ipc("network", network_panel::ipc)
         .ipc("volume", volume_panel::ipc)
+        .ipc("start", start_menu::ipc)
         .run();
 }
