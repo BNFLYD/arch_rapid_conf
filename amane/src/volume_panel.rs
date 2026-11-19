@@ -4,11 +4,11 @@ use std::thread;
 use std::time::Duration;
 
 use amane::{
-    Audio, Center, Color, Column, Horizontal, Key, Keyboard, Layer, LayerWindow, Margin, Monitor,
-    Padding, Parent, Rectangle, Row, Service, Size, Text, Vertical, Weight, Widget, Zone, children,
+    Center, Color, Column, Horizontal, Key, Keyboard, Layer, LayerWindow, Margin, Monitor, Padding,
+    Parent, Rectangle, Row, Service, Size, Text, Vertical, Weight, Widget, Zone, children,
 };
 
-use crate::theme;
+use crate::{audio_level, theme};
 
 // the same width as the launcher and the system panel
 const WIDTH_RATIO: f32 = 0.52;
@@ -217,7 +217,7 @@ pub fn view(monitor: &Monitor) -> LayerWindow {
 }
 
 fn content(width: f32) -> Rectangle {
-    let audio = Audio::read();
+    let levels = audio_level::levels();
     let devices = AudioDevices::read();
     let streams = Streams::read().streams.clone();
 
@@ -228,7 +228,7 @@ fn content(width: f32) -> Rectangle {
     let mut shown = streams.clone();
 
     let column = loop {
-        let items = build_items(&audio, &devices, &shown, bar_width);
+        let items = build_items(&levels, &devices, &shown, bar_width);
         let column = Column::new(items).gap(GAP);
 
         let needed = match Widget::height(&column) {
@@ -263,13 +263,13 @@ fn content(width: f32) -> Rectangle {
 }
 
 fn build_items(
-    audio: &Audio,
+    levels: &audio_level::Levels,
     devices: &AudioDevices,
     streams: &[Stream],
     bar_width: f32,
 ) -> Vec<Box<dyn Widget>> {
-    let volume = audio.volume();
-    let muted = audio.muted();
+    let volume = levels.volume;
+    let muted = levels.muted;
 
     let mut items: Vec<Box<dyn Widget>> = vec![
         Box::new(header()),
@@ -478,10 +478,10 @@ fn master_step(label: &'static str, step: i32) -> Rectangle {
         .align_child(Center, Center)
         .cursor(amane::Pointer)
         .on_click(move |_| {
-            let current = i32::from(Audio::read().volume());
+            let current = i32::from(audio_level::levels().volume);
             let changed = (current + step).clamp(0, 100);
 
-            Audio::set_volume(changed as u8);
+            audio_level::set_volume(changed as u8);
         })
         .child(
             Text::new(label)
@@ -521,7 +521,7 @@ fn mute_button() -> Rectangle {
         .radius(7.0)
         .align_child(Center, Center)
         .cursor(amane::Pointer)
-        .on_click(|_| Audio::toggle_mute())
+        .on_click(|_| audio_level::toggle_mute())
         .child(
             Text::new("Silenciar")
                 .size(13.0)

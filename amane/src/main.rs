@@ -1,6 +1,8 @@
 mod app_launcher;
+mod audio_level;
 mod bar;
 mod canvas;
+mod menu;
 mod modules;
 mod network_panel;
 mod system_panel;
@@ -8,10 +10,14 @@ mod theme;
 mod usage;
 mod volume_panel;
 mod wallpaper;
+mod widgets;
 
 use amane::App;
 
 fn main() {
+    // keeps the volume of the sink up to date with the sound server
+    audio_level::listen();
+
     App::new()
         .font(theme::FONT)
         .window_per_monitor(system_panel::view)

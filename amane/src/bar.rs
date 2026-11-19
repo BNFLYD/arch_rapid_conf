@@ -99,7 +99,14 @@ pub fn start_menu(monitor: &Monitor) -> LayerWindow {
         .clip()
         // a click inside the block has to land somewhere, or it reaches the
         // frame and closes the menu
-        .on_click(|_| {});
+        .on_click(|_| {})
+        // the grid centered in the block; the size is the one the block has
+        // when fully open
+        .align_child(Center, Center)
+        .child(crate::menu::grid(
+            monitor.width as f32 - theme::SIDE_MARGIN * 2.0,
+            area,
+        ));
 
     // the transparent frame: its padding is the side margin, the air above
     // the block and the whole bar window below it

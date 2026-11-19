@@ -1,23 +1,21 @@
-use amane::{
-    Audio, Button, Center, Color, Padding, Rectangle, Row, Scroll, Service, Text, children,
-};
+use amane::{Button, Center, Color, Padding, Rectangle, Row, Scroll, Text, children};
 
-use crate::{modules, theme};
+use crate::{audio_level, modules, theme};
 
 pub fn view() -> Rectangle {
-    let audio = Audio::read();
+    let levels = audio_level::levels();
 
-    let icon = if audio.muted() {
+    let icon = if levels.muted {
         ""
-    } else if audio.volume() == 0 {
+    } else if levels.volume == 0 {
         ""
-    } else if audio.volume() < 50 {
+    } else if levels.volume < 50 {
         ""
     } else {
         ""
     };
 
-    let label = format!("{}%", audio.volume());
+    let label = format!("{}%", levels.volume);
 
     let icon_text = Text::new(icon)
         .size(14.0)
@@ -67,9 +65,9 @@ fn open_volume_panel(_: Button) {
 }
 
 fn change_volume(scroll: Scroll) {
-    let current = i32::from(Audio::read().volume());
+    let current = i32::from(audio_level::levels().volume);
     let step = if scroll.y < 0.0 { 5 } else { -5 };
     let changed = (current + step).clamp(0, 100);
 
-    Audio::set_volume(changed as u8);
+    audio_level::set_volume(changed as u8);
 }

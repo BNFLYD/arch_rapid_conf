@@ -39,7 +39,7 @@ impl Usage {
     }
 }
 
-fn cache_folder() -> PathBuf {
+pub(crate) fn cache_folder() -> PathBuf {
     let base = std::env::var("XDG_CACHE_HOME")
         .map(PathBuf::from)
         .unwrap_or_else(|_| {
