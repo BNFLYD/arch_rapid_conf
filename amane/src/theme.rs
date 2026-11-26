@@ -11,6 +11,13 @@ pub const MENU_MARGIN: f32 = 7.0;
 pub const BAR_WINDOW_HEIGHT: f32 = BAR_HEIGHT + MENU_MARGIN;
 
 pub const BAR_BACKGROUND: &str = "#0c0c0cb3";
+/// el halo de la celda elegida con el teclado
+pub const MENU_SELECTION: &str = "#c5bfae38";
+
+// el tablero de widgets mientras se edita
+pub const EDIT_BORDER: &str = "#c5bfae80";
+pub const TRASH_BACKGROUND: &str = "#b95f61cc";
+pub const TRASH_TEXT: &str = "#f2ece0";
 /// solo si sway no declara ningún fondo legible
 pub const BACKDROP_FALLBACK: &str = "#cfcfcf";
 pub const MODULE_BACKGROUND: &str = "#0c0c0cb3";

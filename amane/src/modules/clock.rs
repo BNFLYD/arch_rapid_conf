@@ -7,12 +7,14 @@ use crate::theme;
 
 pub struct Clock {
     time: String,
+    date: String,
 }
 
 impl Service for Clock {
     fn new() -> Self {
         Self {
             time: amane::output("date +%H:%M"),
+            date: amane::output("date +%d-%b"),
         }
     }
 
@@ -25,9 +27,22 @@ impl Service for Clock {
 
             thread::sleep(Duration::from_secs(60 - seconds));
 
-            Self::write().time = amane::output("date +%H:%M");
+            let (time, date) = (amane::output("date +%H:%M"), amane::output("date +%d-%b"));
+
+            let mut clock = Self::write();
+
+            clock.time = time;
+            clock.date = date;
         }
     }
+}
+
+pub fn time() -> String {
+    Clock::read().time.clone()
+}
+
+pub fn date() -> String {
+    Clock::read().date.clone()
 }
 
 pub fn view() -> Rectangle {

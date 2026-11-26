@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use amane::{
-    Animation, Center, Color, Easing, End, Full, Key, Keyboard, Layer, LayerWindow, Margin,
+    Animation, Center, Color, Column, Easing, End, Full, Key, Keyboard, Layer, LayerWindow, Margin,
     Monitor, Padding, Parent, Rectangle, Row, Service, Start, Vertical, Widget, Zone, children,
 };
 
@@ -30,18 +30,31 @@ impl Service for Roll {
 }
 
 pub fn menu_toggle() {
-    let mut state = Roll::write();
-    let open = !state.open;
+    if menu_open() {
+        menu_close();
+    } else {
+        menu_show();
+    }
+}
 
-    state.open = open;
-    state.amount.to(if open { 1.0 } else { 0.0 });
+pub fn menu_show() {
+    let mut state = Roll::write();
+
+    state.open = true;
+    state.amount.to(1.0);
 }
 
 pub fn menu_close() {
-    let mut state = Roll::write();
+    {
+        let mut state = Roll::write();
 
-    state.open = false;
-    state.amount.to(0.0);
+        state.open = false;
+        state.amount.to(0.0);
+    }
+
+    // closed, the marker is gone and the next open starts on the menu page
+    crate::menu::reset_page();
+    crate::home::reset_edit();
 }
 
 pub fn menu_open() -> bool {
@@ -57,9 +70,7 @@ pub fn menu_amount() -> f32 {
 pub fn menu_ipc(args: &[String]) -> String {
     match args.first().map(String::as_str) {
         Some("open") => {
-            let mut state = Roll::write();
-            state.open = true;
-            state.amount.to(1.0);
+            menu_show();
             "abierto".to_string()
         }
         Some("close") => {
@@ -88,6 +99,25 @@ pub fn start_menu(monitor: &Monitor) -> LayerWindow {
 
     // the area above the bar, which the block may fill
     let area = monitor.height as f32 - theme::MENU_MARGIN - theme::BAR_WINDOW_HEIGHT;
+    let width = monitor.width as f32 - theme::SIDE_MARGIN * 2.0;
+    // the grid columns are what the arrows move by, so the keys need them too
+    let columns = crate::menu::cols(width);
+
+    let page = crate::menu::page();
+
+    // each page is exactly the height of the block, so the slide never shows a
+    // sliver of the other one
+    let pages = Column::new(vec![
+        Box::new(page_of(crate::menu::home(width, area), area)) as Box<dyn Widget>,
+        Box::new(page_of(crate::menu::drawer(width, area), area)),
+    ]);
+
+    // the two pages one above the other, slid inside the block
+    let slided = Rectangle::new()
+        .width(Parent)
+        .height(area * 2.0)
+        .translate(0.0, -area * page)
+        .child(pages);
 
     // the block grows from the top edge of the bar upwards
     let block = Rectangle::new()
@@ -97,16 +127,13 @@ pub fn start_menu(monitor: &Monitor) -> LayerWindow {
         .radius_top_left(theme::BAR_RADIUS)
         .radius_top_right(theme::BAR_RADIUS)
         .clip()
-        // a click inside the block has to land somewhere, or it reaches the
-        // frame and closes the menu
-        .on_click(|_| {})
-        // the grid centered in the block; the size is the one the block has
-        // when fully open
-        .align_child(Center, Center)
-        .child(crate::menu::grid(
-            monitor.width as f32 - theme::SIDE_MARGIN * 2.0,
-            area,
-        ));
+        // holding the empty board also opens the editing mode, and a click on it
+        // leaves the mode instead of closing the menu
+        .on_drag(crate::home::background_drag)
+        .on_click(|_| crate::home::background_click())
+        // from the top: page 0 sits in the viewport until the pager moves it
+        .align_child(Start, Start)
+        .child(slided);
 
     // the transparent frame: its padding is the side margin, the air above
     // the block and the whole bar window below it
@@ -134,10 +161,19 @@ pub fn start_menu(monitor: &Monitor) -> LayerWindow {
         .namespace("amane-start-menu")
         // the window stays up while the block rolls back down
         .visible(open || amount > 0.0)
-        .on_key(|key| {
-            if key == Key::Escape {
-                menu_close();
+        .on_key(move |key| match key {
+            Key::Tab => crate::menu::toggle_page(),
+            // escape leaves the editing mode first, then closes the menu
+            Key::Escape => {
+                if crate::home::editing() {
+                    crate::home::stop_editing();
+                } else {
+                    menu_close();
+                }
             }
+            // the arrows and Enter only mean something in the drawer
+            _ if crate::menu::on_drawer() => crate::menu::press(key, columns),
+            _ => {}
         })
         .child(root)
 }
@@ -200,6 +236,15 @@ fn pill(monitor: &Monitor, amount: f32) -> Rectangle {
             .height(Parent)
             .align(Center),
         )
+}
+
+// one page of the pager: the height of the block, with its content centered
+fn page_of(content: impl Widget + 'static, area: f32) -> Rectangle {
+    Rectangle::new()
+        .width(Parent)
+        .height(area)
+        .align_child(Center, Center)
+        .child(content)
 }
 
 fn left_section() -> Rectangle {

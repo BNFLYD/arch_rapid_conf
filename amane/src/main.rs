@@ -2,6 +2,7 @@ mod app_launcher;
 mod audio_level;
 mod bar;
 mod canvas;
+mod home;
 mod menu;
 mod modules;
 mod network_panel;
