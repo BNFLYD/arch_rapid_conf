@@ -1,10 +1,11 @@
+use std::cell::Cell;
 use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 use std::thread;
 use std::time::{Duration, Instant, SystemTime};
 
-use amane::{Center, Color, Point, Rectangle, Service, Stack, Text, Widget};
+use amane::{Center, Color, Parent, Point, Rectangle, Service, Stack, Text, Widget};
 
 use crate::menu;
 use crate::theme;
@@ -35,13 +36,22 @@ const HOLD_SLACK: f32 = 4.0;
 // the ticker looks at the hold and the file this often
 const TICK: Duration = Duration::from_millis(80);
 const CHECK_FILE: Duration = Duration::from_secs(1);
-// the band at the top of the block that deletes what stays on it; it is
+// the thin strip at the top of the block that deletes what stays on it; it is
 // reserved always, so the widgets never move when the editing mode changes
-const TRASH_BAND: f32 = 56.0;
+const TRASH_STRIP: f32 = 24.0;
+const TRASH_ICON: f32 = 16.0;
+// the corner square that resizes a widget
+const HANDLE: f32 = 20.0;
 // how long a widget has to stay on the band before it goes
 const TRASH_DELAY: Duration = Duration::from_millis(400);
 // two drags closer than this belong to the same gesture
 const CONTINUATION: Duration = Duration::from_millis(300);
+
+thread_local! {
+    // set by a resize event, so a motion without one means the button was let go
+    // (the library reports no release of its own)
+    static RESIZED: Cell<bool> = const { Cell::new(false) };
+}
 
 pub struct Instance {
     // stable identity: it does not change when the widget moves
@@ -77,13 +87,23 @@ struct DragState {
     last: Instant,
 }
 
+struct ResizeState {
+    id: String,
+    // the last size it took, to skip the events that change nothing
+    last: (usize, usize),
+}
+
 pub struct Board {
     pub instances: Vec<Instance>,
     pub editing: bool,
+    // the resize in progress, if any
+    resize: Option<ResizeState>,
     pending: Option<PendingPress>,
     dragging: Option<DragState>,
     // the click that comes with the hold must not open anything nor leave the mode
     swallow_click: bool,
+    // the cells the board has right now, written by the view
+    grid: Option<(usize, usize)>,
     // when the file was read last, so our own saves do not come back as reloads
     loaded_at: Option<SystemTime>,
 }
@@ -93,9 +113,11 @@ impl Service for Board {
         Self {
             instances: load(),
             editing: false,
+            resize: None,
             pending: None,
             dragging: None,
             swallow_click: false,
+            grid: None,
             loaded_at: stamp(),
         }
     }
@@ -152,6 +174,7 @@ pub fn stop_editing() {
 
     board.editing = false;
     board.dragging = None;
+    board.resize = None;
     board.pending = None;
 
     board.save();
@@ -165,6 +188,7 @@ pub fn reset_edit() {
 
     board.pending = None;
     board.dragging = None;
+    board.resize = None;
     board.swallow_click = false;
 }
 
@@ -173,91 +197,144 @@ pub fn cancel_pending() {
     Board::write().pending = None;
 }
 
-/// Page 0: the widgets laid out over the cells they cover.
-pub fn view(width: f32, height: f32) -> impl Widget {
-    let board = Board::read();
+fn remember_grid(columns: usize, rows: usize) {
+    let mut board = Board::write();
 
-    let columns = menu::cols(width);
-    // the band is not part of the grid, so the rows come from what is left
-    let rows = menu::rows(height - TRASH_BAND);
+    if board.grid == Some((columns, rows)) {
+        return;
+    }
 
-    let mut items: Vec<Box<dyn Widget>> = Vec::new();
+    board.grid = Some((columns, rows));
+}
 
-    // reserved always, painted only while the board is edited
+/// Adds a widget of that kind on the first free spot that takes its default
+/// size. Returns false when nothing fits.
+pub fn add(kind: widgets::Kind) -> bool {
+    let Some(spec) = widgets::SPECS.iter().find(|spec| spec.kind == kind) else {
+        return false;
+    };
+
+    let mut board = Board::write();
+
+    // before the board is drawn once, the grid of a 1920x1080 screen is a fair guess
+    let dimensions = board.grid.unwrap_or((17, 9));
+
+    let Some((col, row)) = first_fit(&board.instances, spec.default_size, dimensions) else {
+        return false;
+    };
+
+    let id = next_id(&board.instances, kind);
+
+    board.instances.push(Instance {
+        id,
+        kind,
+        col,
+        row,
+        cols: spec.default_size.0,
+        rows: spec.default_size.1,
+        options: HashMap::new(),
+    });
+
+    board.save();
+
+    true
+}
+
+// the first free spot, reading the grid from the top left
+fn first_fit(
+    instances: &[Instance],
+    size: (usize, usize),
+    board_size: (usize, usize),
+) -> Option<(usize, usize)> {
+    let (columns, rows) = board_size;
+
+    for row in 0..rows {
+        for col in 0..columns {
+            if col + size.0 > columns || row + size.1 > rows {
+                continue;
+            }
+
+            let free = instances
+                .iter()
+                .all(|other| !overlaps_cells(col, row, size.0, size.1, other));
+
+            if free {
+                return Some((col, row));
+            }
+        }
+    }
+
+    None
+}
+
+// whether a widget of that size fits there, ignoring itself
+fn fits(
+    instances: &[Instance],
+    id: &str,
+    col: usize,
+    row: usize,
+    cols: usize,
+    rows: usize,
+) -> bool {
+    instances
+        .iter()
+        .filter(|other| other.id != id)
+        .all(|other| !overlaps_cells(col, row, cols, rows, other))
+}
+
+fn next_id(instances: &[Instance], kind: widgets::Kind) -> String {
+    let mut number = 1;
+
+    loop {
+        let id = format!("{}-{number}", kind.word());
+
+        if instances.iter().all(|instance| instance.id != id) {
+            return id;
+        }
+
+        number += 1;
+    }
+}
+
+/// Arms the hold that turns the editing mode on, or cancels it when the pointer
+/// moves. Returns whether it was a press waiting to become a hold, in which case
+/// there is nothing else to do with it. A widget or the empty board behave the
+/// same here, so nothing about the press is kept.
+fn hold(point: Point) -> bool {
+    let mut board = Board::write();
+
+    if let Some(pending) = board.pending.as_ref() {
+        let moved = (point.x - pending.point.0).hypot(point.y - pending.point.1) > HOLD_SLACK;
+
+        if moved {
+            board.pending = None;
+        }
+
+        return true;
+    }
+
+    // a new press: the click a previous hold spent does not reach this gesture
+    board.swallow_click = false;
+
     if board.editing {
-        items.push(Box::new(trash_band(cells_width(columns))));
+        return false;
     }
 
-    for instance in &board.instances {
-        let deleting = board
-            .dragging
-            .as_ref()
-            .map(|drag| drag.id == instance.id && drag.deleting.is_some())
-            .unwrap_or(false);
+    board.pending = Some(PendingPress {
+        started: Instant::now(),
+        point: (point.x, point.y),
+    });
 
-        let look = widgets::Look {
-            width: cells_width(instance.cols),
-            height: cells_height(instance.rows),
-            editing: board.editing,
-            deleting,
-        };
-
-        let spec = widgets::spec(instance.kind);
-
-        // the point a drag reports is measured from the corner this frame drew,
-        // so that corner goes with the handler; reading it from the state again
-        // would mix two frames and the widget would run away from the pointer
-        let origin = (x(instance.col), y(instance.row));
-
-        let placed = (spec.view)(instance, &look)
-            .translate(origin.0, origin.1)
-            .on_drag({
-                let id = instance.id.clone();
-                let page = (width, height);
-
-                move |point| drag(&id, point, page, origin)
-            });
-
-        items.push(Box::new(placed) as Box<dyn Widget>);
-    }
-
-    Stack::new(items)
-        .width(cells_width(columns))
-        .height(TRASH_BAND + cells_height(rows))
+    true
 }
 
-// the width of a run of cells, with the gaps between them
-pub fn cells_width(cols: usize) -> f32 {
-    cols as f32 * menu::CELL + cols.saturating_sub(1) as f32 * menu::GAP
+/// A press on an empty spot of the board: holding it also opens the editing mode.
+pub fn background_drag(point: Point) {
+    hold(point);
 }
 
-pub fn cells_height(rows: usize) -> f32 {
-    rows as f32 * menu::CELL + rows.saturating_sub(1) as f32 * menu::GAP
-}
-
-pub fn x(col: usize) -> f32 {
-    col as f32 * (menu::CELL + menu::GAP)
-}
-
-pub fn y(row: usize) -> f32 {
-    TRASH_BAND + row as f32 * (menu::CELL + menu::GAP)
-}
-
-fn trash_band(width: f32) -> Rectangle {
-    Rectangle::new()
-        .width(width)
-        .height(TRASH_BAND)
-        .fill(theme::TRASH_BACKGROUND)
-        .radius(theme::BAR_RADIUS)
-        .align_child(Center, Center)
-        .child(
-            Text::new("Eliminar")
-                .size(12.0)
-                .color(Color::from(theme::TRASH_TEXT)),
-        )
-}
-
-// the first drag of a widget: a press, or the motion of a drag already going
+// the drag of a widget: the press arms the hold, and in the editing mode the
+// drags after it move the widget cell by cell
 fn drag(id: &str, point: Point, page: (f32, f32), origin: (f32, f32)) {
     if hold(point) {
         return;
@@ -307,8 +384,8 @@ fn drag(id: &str, point: Point, page: (f32, f32), origin: (f32, f32)) {
         .map(|drag| drag.grabbed)
         .unwrap_or((0.0, 0.0));
 
-    // the pointer over the reserved band is the only way to delete
-    let over_the_band = (0.0..TRASH_BAND).contains(&(origin.1 + point.y));
+    // the pointer over the reserved strip is the only way to delete
+    let over_the_band = (0.0..TRASH_STRIP).contains(&(origin.1 + point.y));
 
     if let Some(drag) = board.dragging.as_mut() {
         drag.last = Instant::now();
@@ -323,7 +400,7 @@ fn drag(id: &str, point: Point, page: (f32, f32), origin: (f32, f32)) {
     }
 
     let columns = menu::cols(page.0);
-    let rows = menu::rows(page.1);
+    let rows = menu::rows(page.1 - TRASH_STRIP);
 
     let candidate = candidate_cell(
         origin,
@@ -350,41 +427,327 @@ fn drag(id: &str, point: Point, page: (f32, f32), origin: (f32, f32)) {
     }
 }
 
-/// Arms the hold that turns the editing mode on, or cancels it when the pointer
-/// moves. Returns whether it was a press waiting to become a hold, in which case
-/// there is nothing else to do with it. A widget or the empty board behave the
-/// same here, so nothing about the press is kept.
-fn hold(point: Point) -> bool {
-    let mut board = Board::write();
+/// Page 0: the widgets laid out over the cells they cover.
+pub fn view(width: f32, height: f32) -> impl Widget {
+    let columns = menu::cols(width);
+    // the strip is not part of the grid, so the rows come from what is left
+    let rows = menu::rows(height - TRASH_STRIP);
 
-    if let Some(pending) = board.pending.as_ref() {
-        let moved = (point.x - pending.point.0).hypot(point.y - pending.point.1) > HOLD_SLACK;
+    // the panel that adds widgets needs to know how many cells there are, and
+    // it draws on another window; this is written before the read below, on the
+    // same thread, so the lock is taken twice in a row and never at once
+    remember_grid(columns, rows);
 
-        if moved {
-            board.pending = None;
-        }
+    let board = Board::read();
 
-        return true;
-    }
+    // the board needs a target of its own, or holding an empty spot does
+    // nothing: it goes first, so the widgets on top win the hit test
+    let background = Rectangle::new()
+        .width(Parent)
+        .height(Parent)
+        .fill(Color::TRANSPARENT)
+        .on_drag(background_drag)
+        .on_move(|_| settle())
+        .on_click(|_| background_click());
 
-    // a new press: the click a previous hold spent does not reach this gesture
-    board.swallow_click = false;
+    let mut items: Vec<Box<dyn Widget>> = vec![Box::new(background)];
 
+    let over_the_strip = board
+        .dragging
+        .as_ref()
+        .map(|drag| drag.deleting.is_some())
+        .unwrap_or(false);
+
+    // reserved always, drawn only while the board is edited
     if board.editing {
-        return false;
+        items.push(Box::new(trash_strip(cells_width(columns), over_the_strip)));
     }
 
-    board.pending = Some(PendingPress {
-        started: Instant::now(),
-        point: (point.x, point.y),
-    });
+    // with nothing on the board the strip is useless, but there has to be a way
+    // to add the first widget without holding anything
+    if !board.editing && board.instances.is_empty() {
+        items.push(Box::new(only_the_plus(cells_width(columns))));
+    }
 
-    true
+    for instance in &board.instances {
+        let deleting = board
+            .dragging
+            .as_ref()
+            .map(|drag| drag.id == instance.id && drag.deleting.is_some())
+            .unwrap_or(false);
+
+        let resizing = board
+            .resize
+            .as_ref()
+            .filter(|resize| resize.id == instance.id)
+            .map(|_| (instance.cols, instance.rows));
+
+        let look = widgets::Look {
+            width: cells_width(instance.cols),
+            height: cells_height(instance.rows),
+            editing: board.editing,
+            deleting,
+            resizing,
+        };
+
+        let spec = widgets::spec(instance.kind);
+
+        // the point a drag reports is measured from the corner this frame drew,
+        // so that corner goes with the handler; reading it from the state again
+        // would mix two frames and the widget would run away from the pointer
+        let origin = (x(instance.col), y(instance.row));
+
+        let placed = (spec.view)(instance, &look)
+            .translate(origin.0, origin.1)
+            .on_drag({
+                let id = instance.id.clone();
+                let page = (width, height);
+
+                move |point| drag(&id, point, page, origin)
+            });
+
+        items.push(Box::new(placed) as Box<dyn Widget>);
+
+        // the corner that resizes: it goes after the body, so it wins the
+        // pointer inside its square and the body keeps moving the widget. It is
+        // always drawn while editing, so grabbing it never depends on a hover
+        if board.editing {
+            let handle = resize_handle(instance, width, height);
+
+            items.push(Box::new(handle) as Box<dyn Widget>);
+        }
+    }
+
+    Stack::new(items)
+        .width(cells_width(columns))
+        .height(TRASH_STRIP + cells_height(rows))
 }
 
-/// A press on an empty spot of the board: holding it also opens the editing mode.
-pub fn background_drag(point: Point) {
-    hold(point);
+// the width of a run of cells, with the gaps between them
+pub fn cells_width(cols: usize) -> f32 {
+    cols as f32 * menu::CELL + cols.saturating_sub(1) as f32 * menu::GAP
+}
+
+pub fn cells_height(rows: usize) -> f32 {
+    rows as f32 * menu::CELL + rows.saturating_sub(1) as f32 * menu::GAP
+}
+
+pub fn x(col: usize) -> f32 {
+    col as f32 * (menu::CELL + menu::GAP)
+}
+
+pub fn y(row: usize) -> f32 {
+    TRASH_STRIP + row as f32 * (menu::CELL + menu::GAP)
+}
+
+// the plus to add widgets on the left, the trash centred, and a hairline that
+// keeps the strip apart from the first row
+fn trash_strip(width: f32, active: bool) -> Stack {
+    let color = if active {
+        theme::TRASH_ICON_ACTIVE
+    } else {
+        theme::TRASH_ICON
+    };
+
+    let trash = Rectangle::new()
+        .width(width)
+        .height(TRASH_STRIP)
+        .align_child(Center, Center)
+        .child(
+            Text::new("\u{f1f8}")
+                .size(TRASH_ICON)
+                .color(Color::from(color)),
+        );
+
+    let hairline = Rectangle::new()
+        .width(width)
+        .height(1.0)
+        .fill(theme::TRASH_LINE)
+        .translate(0.0, TRASH_STRIP - 1.0);
+
+    Stack::new(vec![
+        Box::new(trash) as Box<dyn Widget>,
+        Box::new(plus()),
+        Box::new(hairline),
+    ])
+    .width(width)
+    .height(TRASH_STRIP)
+}
+
+// the strip alone, for a board with nothing on it: the only way to add
+fn only_the_plus(width: f32) -> Stack {
+    let hairline = Rectangle::new()
+        .width(width)
+        .height(1.0)
+        .fill(theme::TRASH_LINE)
+        .translate(0.0, TRASH_STRIP - 1.0);
+
+    Stack::new(vec![
+        Box::new(plus()) as Box<dyn Widget>,
+        Box::new(hairline),
+    ])
+    .width(width)
+    .height(TRASH_STRIP)
+}
+
+// the plus that opens the catalog of widgets
+fn plus() -> Rectangle {
+    let color = if crate::add_widget::hovered() {
+        theme::ADD_ICON_ACTIVE
+    } else {
+        theme::ADD_ICON
+    };
+
+    Rectangle::new()
+        .width(28.0)
+        .height(TRASH_STRIP)
+        .translate(8.0, 0.0)
+        .align_child(Center, Center)
+        .cursor(amane::Pointer)
+        .on_hover(crate::add_widget::set_hovered)
+        .on_click(|_| crate::add_widget::open())
+        .child(
+            Text::new("\u{eadc}")
+                .size(TRASH_ICON)
+                .color(Color::from(color)),
+        )
+}
+
+/// Every motion of the board comes through here, which makes it the place to
+/// notice that a resize ended: a motion with no resize in the same event means
+/// the button was let go.
+fn settle() {
+    let acted = RESIZED.with(|resized| resized.replace(false));
+
+    if acted {
+        return;
+    }
+
+    let mut board = Board::write();
+
+    board.resize = None;
+}
+
+// the square in the corner that resizes the widget
+fn resize_handle(instance: &Instance, width: f32, height: f32) -> Rectangle {
+    // the corner of the handle as this frame draws it: the drag reports its
+    // point from here, so the two always travel together
+    let origin = (
+        x(instance.col) + cells_width(instance.cols) - HANDLE,
+        y(instance.row) + cells_height(instance.rows) - HANDLE,
+    );
+
+    Rectangle::new()
+        .width(HANDLE)
+        .height(HANDLE)
+        .translate(origin.0, origin.1)
+        .fill(theme::EDIT_BORDER)
+        .radius(2.0)
+        .on_drag({
+            let id = instance.id.clone();
+            let page = (width, height);
+
+            move |point| resize_drag(&id, point, page, origin)
+        })
+        .on_click(|_| {
+            clicked();
+        })
+}
+
+// a press on the handle starts the resize, and the drags after it grow or
+// shrink the widget cell by cell, stopping at the last size that fitted
+fn resize_drag(id: &str, point: Point, page: (f32, f32), origin: (f32, f32)) {
+    RESIZED.with(|resized| resized.set(true));
+
+    let mut board = Board::write();
+
+    // a press starts the resize; the drags after it only move the far corner
+    if board
+        .resize
+        .as_ref()
+        .map(|resize| resize.id != id)
+        .unwrap_or(true)
+    {
+        board.resize = Some(ResizeState {
+            id: String::from(id),
+            last: (0, 0),
+        });
+    }
+
+    let Some(instance) = board
+        .instances
+        .iter()
+        .find(|instance| instance.id == id)
+        .map(|instance| {
+            (
+                instance.col,
+                instance.row,
+                instance.cols,
+                instance.rows,
+                instance.kind,
+            )
+        })
+    else {
+        return;
+    };
+
+    let Some(spec) = widgets::SPECS.iter().find(|spec| spec.kind == instance.4) else {
+        return;
+    };
+
+    let columns = menu::cols(page.0);
+    let rows = menu::rows(page.1 - TRASH_STRIP);
+    let step = menu::CELL + menu::GAP;
+
+    // where the pointer is, in the same space the widget was laid out in: the
+    // far corner follows it, so growing never depends on accumulating deltas
+    let here = (origin.0 + point.x, origin.1 + point.y);
+
+    let wanted_cols = ((here.0 - x(instance.0)) / step).round().max(1.0) as i64;
+    let wanted_rows = ((here.1 - y(instance.1)) / step).round().max(1.0) as i64;
+
+    let mut cols = wanted_cols.max(spec.min_size.0 as i64);
+    let mut rows_wanted = wanted_rows.max(spec.min_size.1 as i64);
+
+    if let Some((max_cols, max_rows)) = spec.max_size {
+        cols = cols.min(max_cols as i64);
+        rows_wanted = rows_wanted.min(max_rows as i64);
+    }
+
+    cols = cols.min((columns - instance.0) as i64);
+    rows_wanted = rows_wanted.min((rows - instance.1) as i64);
+
+    let candidate = (cols.max(1) as usize, rows_wanted.max(1) as usize);
+
+    let last = board
+        .resize
+        .as_ref()
+        .map(|resize| resize.last)
+        .unwrap_or((0, 0));
+
+    if candidate == last || candidate == (instance.2, instance.3) {
+        return;
+    }
+
+    if !fits(
+        &board.instances,
+        id,
+        instance.0,
+        instance.1,
+        candidate.0,
+        candidate.1,
+    ) {
+        return;
+    }
+
+    if let Some(instance) = board.instances.iter_mut().find(|item| item.id == id) {
+        instance.cols = candidate.0;
+        instance.rows = candidate.1;
+    }
+
+    if let Some(resize) = board.resize.as_mut() {
+        resize.last = candidate;
+    }
 }
 
 // the cell the widget's corner goes to, from where the pointer is and the
@@ -409,7 +772,7 @@ fn candidate_cell(
 
 // the row a point of the board falls on, counted from the first row of widgets
 fn row_of(point: f32) -> usize {
-    (((point - TRASH_BAND) / (menu::CELL + menu::GAP))
+    (((point - TRASH_STRIP) / (menu::CELL + menu::GAP))
         .round()
         .max(0.0)) as usize
 }
@@ -426,6 +789,7 @@ pub fn clicked() -> bool {
 
     board.pending = None;
     board.dragging = None;
+    board.resize = None;
 
     std::mem::take(&mut board.swallow_click)
 }
@@ -554,7 +918,7 @@ fn overlaps_cells(col: usize, row: usize, cols: usize, rows: usize, other: &Inst
 }
 
 // the ticker: the hold that turns the editing mode on, and the widget left on
-// the band for long enough
+// the strip for long enough
 fn hold_tick() {
     let mut board = Board::write();
 
@@ -846,9 +1210,9 @@ mod tests {
         assert_eq!(cells_width(1), 96.0);
         assert_eq!(cells_width(3), 308.0);
         assert_eq!(x(2), 212.0);
-        // the first row of widgets starts below the band
-        assert_eq!(y(0), TRASH_BAND);
-        assert_eq!(y(1), TRASH_BAND + 106.0);
+        // the first row of widgets starts below the strip
+        assert_eq!(y(0), TRASH_STRIP);
+        assert_eq!(y(1), TRASH_STRIP + 106.0);
         assert_eq!(cell_of(x(2) + 10.0), 2);
     }
 

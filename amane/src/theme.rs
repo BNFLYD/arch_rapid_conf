@@ -15,9 +15,14 @@ pub const BAR_BACKGROUND: &str = "#0c0c0cb3";
 pub const MENU_SELECTION: &str = "#c5bfae38";
 
 // el tablero de widgets mientras se edita
-pub const EDIT_BORDER: &str = "#c5bfae80";
-pub const TRASH_BACKGROUND: &str = "#b95f61cc";
-pub const TRASH_TEXT: &str = "#f2ece0";
+pub const EDIT_BORDER: &str = "#55504688";
+pub const DELETE_BORDER: &str = "#b95f61";
+pub const TRASH_ICON: &str = "#a39d90";
+pub const TRASH_ICON_ACTIVE: &str = "#b95f61";
+pub const TRASH_LINE: &str = "#55504666";
+pub const ADD_ICON: &str = "#a39d90";
+pub const ADD_ICON_ACTIVE: &str = "#e8e2d3";
+pub const SIZE_LABEL: &str = "#a39d90";
 /// solo si sway no declara ningún fondo legible
 pub const BACKDROP_FALLBACK: &str = "#cfcfcf";
 pub const MODULE_BACKGROUND: &str = "#0c0c0cb3";

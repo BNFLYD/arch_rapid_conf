@@ -1,4 +1,4 @@
-use amane::{Center, Color, Column, Rectangle, Text, Weight, Widget};
+use amane::{Center, Color, Column, Rectangle, Stack, Text, Weight, Widget};
 
 use crate::home::Instance;
 use crate::modules::clock;
@@ -25,25 +25,29 @@ pub fn view(_instance: &Instance, look: &Look) -> Rectangle {
     let tile = Rectangle::new()
         .width(look.width)
         .height(look.height)
-        .fill(background(look))
+        .fill(theme::MODULE_BACKGROUND)
         .radius(theme::BAR_RADIUS)
         .align_child(Center, Center)
         .on_click(|_| {
             crate::home::clicked();
-        })
-        .child(Column::new(labels).gap(2.0).align(Center));
+        });
 
-    if look.editing {
-        tile.border(1.0, theme::EDIT_BORDER)
-    } else {
+    // the size label goes on top of the content, the content is never replaced
+    let content = Column::new(labels).gap(2.0).align(Center);
+
+    let tile = match look.resizing {
+        Some(size) => tile.child(Stack::new(vec![
+            Box::new(content) as Box<dyn Widget>,
+            Box::new(crate::widgets::size_label(size, look.width, look.height)),
+        ])),
+        None => tile.child(content),
+    };
+
+    if !look.editing {
         tile
-    }
-}
-
-fn background(look: &Look) -> Color {
-    if look.deleting {
-        Color::from(theme::TRASH_BACKGROUND)
+    } else if look.deleting {
+        tile.border(1.0, theme::DELETE_BORDER)
     } else {
-        Color::from(theme::MODULE_BACKGROUND)
+        tile.border(1.0, theme::EDIT_BORDER)
     }
 }

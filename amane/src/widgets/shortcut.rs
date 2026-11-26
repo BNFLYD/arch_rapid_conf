@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use amane::{Apps, Center, Color, Column, Image, Pointer, Rectangle, Service, Text, Widget};
+use amane::{Apps, Center, Color, Column, Image, Pointer, Rectangle, Service, Stack, Text, Widget};
 
 use crate::home::Instance;
 use crate::theme;
@@ -31,18 +31,30 @@ pub fn view(instance: &Instance, look: &Look) -> Rectangle {
         ),
     ];
 
+    // the size label goes on top of the content, the content is never replaced
+    let body = Column::new(content).gap(6.0).align(Center);
+
     let tile = Rectangle::new()
         .width(look.width)
         .height(look.height)
-        .fill(background(look))
+        .fill(theme::MODULE_BACKGROUND)
         .radius(theme::BAR_RADIUS)
-        .align_child(Center, Center)
-        .child(Column::new(content).gap(6.0).align(Center));
+        .align_child(Center, Center);
 
-    let tile = if look.editing {
-        tile.border(1.0, theme::EDIT_BORDER)
-    } else {
+    let tile = match look.resizing {
+        Some(size) => tile.child(Stack::new(vec![
+            Box::new(body) as Box<dyn Widget>,
+            Box::new(crate::widgets::size_label(size, look.width, look.height)),
+        ])),
+        None => tile.child(body),
+    };
+
+    let tile = if !look.editing {
         tile
+    } else if look.deleting {
+        tile.border(1.0, theme::DELETE_BORDER)
+    } else {
+        tile.border(1.0, theme::EDIT_BORDER)
     };
 
     // the click stays in both modes, so the pointer targets do not change when
@@ -60,14 +72,6 @@ pub fn view(instance: &Instance, look: &Look) -> Rectangle {
         crate::bar::menu_close();
         amane::spawn(&exec);
     })
-}
-
-fn background(look: &Look) -> Color {
-    if look.deleting {
-        Color::from(theme::TRASH_BACKGROUND)
-    } else {
-        Color::from(theme::MODULE_BACKGROUND)
-    }
 }
 
 fn icon_or_initial(icon: Option<PathBuf>, name: &str) -> Rectangle {

@@ -55,6 +55,8 @@ pub fn menu_close() {
     // closed, the marker is gone and the next open starts on the menu page
     crate::menu::reset_page();
     crate::home::reset_edit();
+    // the panel of widgets never outlives the menu
+    crate::add_widget::close();
 }
 
 pub fn menu_open() -> bool {
@@ -127,10 +129,9 @@ pub fn start_menu(monitor: &Monitor) -> LayerWindow {
         .radius_top_left(theme::BAR_RADIUS)
         .radius_top_right(theme::BAR_RADIUS)
         .clip()
-        // holding the empty board also opens the editing mode, and a click on it
-        // leaves the mode instead of closing the menu
-        .on_drag(crate::home::background_drag)
-        .on_click(|_| crate::home::background_click())
+        // a click inside the block has to land somewhere, or it reaches the
+        // frame and closes the menu; the board handles its own clicks
+        .on_click(|_| {})
         // from the top: page 0 sits in the viewport until the pager moves it
         .align_child(Start, Start)
         .child(slided);
@@ -163,9 +164,12 @@ pub fn start_menu(monitor: &Monitor) -> LayerWindow {
         .visible(open || amount > 0.0)
         .on_key(move |key| match key {
             Key::Tab => crate::menu::toggle_page(),
-            // escape leaves the editing mode first, then closes the menu
+            // escape closes the panel of widgets, then leaves the editing mode,
+            // and only then closes the menu
             Key::Escape => {
-                if crate::home::editing() {
+                if crate::add_widget::is_open() {
+                    crate::add_widget::close();
+                } else if crate::home::editing() {
                     crate::home::stop_editing();
                 } else {
                     menu_close();

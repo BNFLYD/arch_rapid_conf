@@ -1,3 +1,4 @@
+mod add_widget;
 mod app_launcher;
 mod audio_level;
 mod bar;
@@ -30,6 +31,8 @@ fn main() {
         // before the bar, so the bar stays above it
         .window_per_monitor(canvas::view)
         .window_per_monitor(bar::start_menu)
+        // the panel of widgets is mapped after the menu, so it stays above it
+        .window_per_monitor(add_widget::view)
         .window_per_monitor(bar::view)
         .ipc("launcher", app_launcher::ipc)
         .ipc("panel", system_panel::ipc)
