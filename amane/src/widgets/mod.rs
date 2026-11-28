@@ -1,4 +1,5 @@
 pub mod clock;
+pub mod heatmap;
 pub mod shortcut;
 pub mod tile;
 
@@ -19,6 +20,7 @@ use crate::theme;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Kind {
     Clock,
+    Heatmap,
     Shortcut,
 }
 
@@ -26,6 +28,7 @@ impl Kind {
     pub fn parse(word: &str) -> Option<Self> {
         match word {
             "clock" => Some(Kind::Clock),
+            "heatmap" => Some(Kind::Heatmap),
             "shortcut" => Some(Kind::Shortcut),
             _ => None,
         }
@@ -35,6 +38,7 @@ impl Kind {
     pub fn word(self) -> &'static str {
         match self {
             Kind::Clock => "clock",
+            Kind::Heatmap => "heatmap",
             Kind::Shortcut => "shortcut",
         }
     }
@@ -96,6 +100,16 @@ pub const SPECS: &[Spec] = &[
         min_size: (2, 1),
         max_size: None,
         view: clock::view,
+    },
+    Spec {
+        kind: Kind::Heatmap,
+        title: "Actividad Git",
+        description: "Tus commits locales, sin importar el remoto",
+        icon: "\u{f1d3}",
+        default_size: (7, 2),
+        min_size: (7, 2),
+        max_size: None,
+        view: heatmap::view,
     },
     Spec {
         kind: Kind::Shortcut,

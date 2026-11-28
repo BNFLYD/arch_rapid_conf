@@ -28,6 +28,9 @@ pub const BACKDROP_FALLBACK: &str = "#cfcfcf";
 pub const MODULE_BACKGROUND: &str = "#0c0c0cb3";
 pub const MODULE_FOREGROUND: &str = "#dad4c3";
 
+// actividad local: ninguno, 1–2, 3–5, 6–9 y 10 o más commits
+pub const HEATMAP: [&str; 5] = ["#dad4c3", "#99eedd", "#7ee1d3", "#63d5ca", "#47c8c0"];
+
 pub const PANEL_FOREGROUND: &str = "#e8e2d3";
 pub const PANEL_MUTED: &str = "#a39d90";
 pub const PANEL_BORDER: &str = "#555046";

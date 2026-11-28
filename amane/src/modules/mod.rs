@@ -10,6 +10,7 @@ pub(crate) fn measured_width(widget: &impl Widget) -> f32 {
     }
 }
 
+pub mod activity;
 pub mod clock;
 pub mod launcher;
 pub mod network;
